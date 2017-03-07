@@ -1,0 +1,29 @@
+{
+	"name": "js-vue-utils",
+	"version": "1.0-SNAPSHOT",
+	"variables": {
+		"github": "https://raw.githubusercontent.com/nablex/js-vue-utils",
+		"version": "master"
+	},
+	"scopes": {
+		"misc": {
+			"js-utils": {
+				"type": "bundle",
+				"url": "https://raw.githubusercontent.com/nablex/js-utils/master/bundle-${version}.json",
+				"scopes": ["misc"],
+				"includes": ["router.js"]
+			},
+			"vue-router.js": {
+				"description": "Contains a generic router",
+				"folder": "misc",
+				"url": "${github}/${version}/misc/vue-router.js",
+			}
+		},
+		"nabu": {
+			"cms-masterdata.js": {
+				"folder": "cms",
+				"url": "${github}/${version}/cms/cms-masterdata.js",
+			}
+		}
+	}
+}
