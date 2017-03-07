@@ -7,16 +7,18 @@
 	},
 	"scopes": {
 		"misc": {
-			"js-utils": {
-				"type": "bundle",
-				"url": "https://raw.githubusercontent.com/nablex/js-utils/master/bundle-${version}.json",
-				"scopes": ["misc"],
-				"includes": ["router.js"]
-			},
 			"vue-router.js": {
 				"description": "Contains a generic router",
 				"folder": "misc",
 				"url": "${github}/${version}/misc/vue-router.js",
+				"requires": {
+					"js-utils": {
+						"type": "bundle",
+						"url": "https://raw.githubusercontent.com/nablex/js-utils/master/bundle-${version}.json",
+						"scopes": ["misc"],
+						"includes": ["router.js"]
+					}
+				}
 			}
 		},
 		"nabu": {
