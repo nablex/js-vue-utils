@@ -16,6 +16,13 @@ nabu.utils.vue.render = function(parameters) {
 	var component = parameters.content;
 	// if we have a return value, we need to add it to the anchor
 	if (component) {
+		// if you return a string, we assume it is a template id
+		if (typeof component == "string" && component.substring(0, 1) == "#") {
+			var extended = Vue.extend({
+				template: component
+			});
+			component = new extended({ data: parameters });
+		}
 		// a function to complete the appending of the component to the anchor
 		var complete = function(resolvedContent) {
 			if (resolvedContent) {
@@ -102,6 +109,6 @@ nabu.utils.vue.render = function(parameters) {
 }
 Vue.mixin({
 	computed: {
-		$render: nabu.utils.vue.render
+		$render: function() { return nabu.utils.vue.render }
 	}
 });
