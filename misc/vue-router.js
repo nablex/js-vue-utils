@@ -26,106 +26,20 @@ nabu.services.VueRouter = function(parameters) {
 		if (route.enter) {
 			var originalEnter = route.enter;
 			route.enter = function(anchorName, parameters, previousRoute, previousParameters) {
-				var anchor = nabu.utils.anchors.find(anchorName);
-				if (!anchor) {
-					anchor = document.getElementById(anchorName);
-				}
-				var component = originalEnter(parameters, previousRoute, previousParameters);
-				// if we have a return value, we need to add it to the anchor
-				if (component) {
-					// if you return a string, we assume it is a template id
-					if (typeof component == "string") {
-						if (!self.components[component]) {
-							self.components[component] = Vue.extend({
-								template: "#" + component
-							});
-						}
-						component = new self.components[component]({ data: parameters });
-					}
-					// a function to complete the appending of the component to the anchor
-					var complete = function(resolvedContent) {
-						if (resolvedContent) {
-							component = resolvedContent;
-						}
-						var element = anchor.$el ? anchor.$el : anchor;
-						// unless we explicitly want to append content, wipe the current content
-						if (!route.append) {
-							if (anchor.clear) {
-								anchor.clear();
-							}
-							else if (element) {
-								nabu.utils.elements.clear(element);
-							}
-						}
-						// it's a vue component
-						if (component.$appendTo) {
-							component.$appendTo(element);
-						}
-						else if (typeof(component) == "string") {
-							element.innerHTML = component;
-						}
-						// we assume it's a html element
-						else {
-							element.appendChild(component);
-						}
-						// enrich the anchor with contextually relevant information
-						element.setAttribute("route", route.alias);
-						if (component.$options && component.$options.template) {
-							if (component.$options.template.substring(0, 1) == "#") {
-								var id = component.$options.template.substring(1);
-								element.setAttribute("template", id);
-								var template = document.getElementById(id);
-								for (var i = 0; i < template.attributes.length; i++) {
-									if (template.attributes[i].name != "id") {
-										element.setAttribute(template.attributes[i].name, template.attributes[i].value);
-									}
-								}
-							}
-						}
+				route.$lastInstance = nabu.utils.vue.render({
+					target: anchorName,
+					content: originalEnter(parameters, previousRoute, previousParameters),
+					ready: function() {
 						if (route.ready) {
 							route.ready(parameters, previousRoute, previousParameters);
 						}
-					};
-					// it's a vue component
-					if (component.$mount) {
-						route.$lastInstance = component;
-						var mounted = null;
-						if (!component.$el) {
-							mounted = component.$mount();
-						}
-						else {
-							component.$remove();
-							mounted = component;
-						}
-// 						var mounted = !component.$el ? component.$mount() : component;
-						// if we have an activate method, call it, it can perform asynchronous actions
-						if (mounted.$options.activate) {
-							if (mounted.$options.activate instanceof Array) {
-								// TODO: loop over them and use a combined promise
-								mounted.$options.activate[0].call(component, complete);
-							}
-							else {
-								mounted.$options.activate.call(component, complete);
-							}
-						}
-						else {
-							complete();
-						}
+					},
+					prepare: function(element) {
+						// enrich the anchor with contextually relevant information
+						element.setAttribute("route", route.alias);
 					}
-					// for HTML components we simply stop
-					else {
-						// it's a promise
-						if (component.success) {
-							component.success(function(result) {
-								complete(result.responseText);
-							});
-						}
-						else {
-							complete();
-						}
-					}
-				}
-				return component;
+				});
+				return route.$lastInstance;
 			};
 		}
 		var originalLeave = route.leave;

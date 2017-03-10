@@ -6,7 +6,19 @@
 		"version": "master"
 	},
 	"scopes": {
+		"core": {
+			"vue.js": {
+				"description": "Slightly modified version of vuejs",
+				"folder": "core",
+				"url": "${github}/${version}/vue.js"
+			}
+		},
 		"misc": {
+			"render.js": {
+				"description": "A reusable rendering function",
+				"folder": "misc",
+				"url": "${github}/${version}/misc/render.js",
+			}
 			"vue-router.js": {
 				"description": "Contains a generic router",
 				"folder": "misc",
@@ -17,6 +29,12 @@
 						"url": "https://raw.githubusercontent.com/nablex/js-utils/master/bundle-${version}.json",
 						"scopes": ["misc"],
 						"includes": ["router.js"]
+					},
+					"vue.js": {
+						"self": "core"
+					},
+					"render.js": {
+						"self": "misc"
 					}
 				}
 			}
