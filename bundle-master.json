@@ -18,7 +18,7 @@
 				"description": "A reusable rendering function",
 				"folder": "misc",
 				"url": "${github}/${version}/misc/render.js",
-			}
+			},
 			"vue-router.js": {
 				"description": "Contains a generic router",
 				"folder": "misc",
