@@ -23,6 +23,9 @@ nabu.utils.vue.render = function(parameters) {
 			});
 			component = new extended({ data: parameters });
 		}
+		else if (component instanceof Function) {
+			component = component();
+		}
 		// a function to complete the appending of the component to the anchor
 		var complete = function(resolvedContent) {
 			if (resolvedContent) {

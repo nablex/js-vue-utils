@@ -37,6 +37,11 @@
 						"self": "misc"
 					}
 				}
+			},
+			"vue2-features.js": {
+				"description": "Some generic features brought over from vue1",
+				"folder": "misc",
+				"url": "${github}/${version}/misc/vue2-features.js",
 			}
 		},
 		"nabu": {
