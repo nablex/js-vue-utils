@@ -44,6 +44,23 @@
 				"url": "${github}/${version}/misc/vue2-features.js",
 			}
 		},
+		"directives": {
+			"auto-close.js": {
+				"description": "Makes a component (like a popup menu) auto closeable when you click elsewhere. You can also mark certain elements within it to also close it (like a button) using a generic auto-close='true' attribute",
+				"folder": "directives",
+				"url": "${github}/${version}/directives/auto-close.js",
+			},
+			"sticky-header.js": {
+				"description": "Add it to a menu that has to stick to the top of the page and disappear on scroll down but reappear on scroll up",
+				"folder": "directives/sticky-header",
+				"url": "${github}/${version}/directives/sticky-header.js",
+			},
+			"sticky-header.css": {
+				"description": "Styling for the sticky header",
+				"folder": "directives/sticky-header",
+				"url": "${github}/${version}/directives/sticky-header.css",
+			}
+		},
 		"nabu": {
 			"cms-masterdata.js": {
 				"folder": "cms",
