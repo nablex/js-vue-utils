@@ -1,0 +1,48 @@
+{
+	"name": "js-vue-utils", 
+	"scopes": {
+		"directives": {
+			"auto-close.js": {
+				"folder": "directives", 
+				"url": "directives/auto-close.js"
+			}, 
+			"sticky.css": {
+				"folder": "directives/sticky-header/", 
+				"url": "directives/sticky-header/sticky.css"
+			}, 
+			"sticky-header.js": {
+				"folder": "directives/sticky-header/", 
+				"url": "directives/sticky-header/sticky-header.js"
+			}
+		}, 
+		"utils": {
+
+		}, 
+		"vue": {
+			"vue.js": {
+				"folder": "vue", 
+				"url": "vue/vue.js"
+			}
+		}, 
+		"cms": {
+			"cms-masterdata.js": {
+				"folder": "cms", 
+				"url": "cms/cms-masterdata.js"
+			}
+		}, 
+		"misc": {
+			"vue2-features.js": {
+				"folder": "misc", 
+				"url": "misc/vue2-features.js"
+			}, 
+			"vue-router.js": {
+				"folder": "misc", 
+				"url": "misc/vue-router.js"
+			}, 
+			"render.js": {
+				"folder": "misc", 
+				"url": "misc/render.js"
+			}
+		}
+	}
+}
