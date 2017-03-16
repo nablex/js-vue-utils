@@ -3,8 +3,8 @@
 	"resources": {
 		"directives": {
 			"sticky-header": {
-				"sticky.css": {
-					"url": "directives/sticky-header/sticky.css"
+				"sticky-header.css": {
+					"url": "directives/sticky-header/sticky-header.css"
 				}, 
 				"sticky-header.js": {
 					"url": "directives/sticky-header/sticky-header.js"
@@ -12,6 +12,9 @@
 			}, 
 			"auto-close.js": {
 				"url": "directives/auto-close.js"
+			}, 
+			"route.js": {
+				"url": "directives/route.js"
 			}
 		}, 
 		"vue": {
@@ -34,9 +37,6 @@
 			"render.js": {
 				"url": "misc/render.js"
 			}
-		}, 
-		"bundle-backup.json": {
-			"url": "bundle-backup.json"
 		}
 	}
 }
