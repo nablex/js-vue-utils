@@ -29,6 +29,11 @@ Vue.mixin({
 				return false;
 			}
 			call(this);
+		},
+		$remove: function() {
+			if (this.$el) {
+				this.$el.remove();
+			}
 		}
 	},
 	// re-add the ready lifecycle state
