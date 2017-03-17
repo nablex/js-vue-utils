@@ -1,6 +1,22 @@
 {
 	"name": "js-vue-utils", 
 	"resources": {
+		"form": {
+			"text": {
+				"text.tpl": {
+					"url": "form/text/text.tpl"
+				}, 
+				"text.js": {
+					"url": "form/text/text.js"
+				}
+			}, 
+			"form.tpl": {
+				"url": "form/form.tpl"
+			}, 
+			"form.js": {
+				"url": "form/form.js"
+			}
+		}, 
 		"directives": {
 			"sticky-header": {
 				"sticky-header.css": {
@@ -12,6 +28,9 @@
 			}, 
 			"auto-close.js": {
 				"url": "directives/auto-close.js"
+			}, 
+			"timeout.js": {
+				"url": "directives/timeout.js"
 			}, 
 			"route.js": {
 				"url": "directives/route.js"
