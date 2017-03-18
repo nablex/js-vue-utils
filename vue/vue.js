@@ -3,6 +3,7 @@ Slightly customized version of vue, changes are:
 
 - allow vm on document.body (line 9120+)
 - expose the observe method in the public API to build services with observable state (line 4063)
+- updated $emit to check for events {} like in vue1 (line 1917)
 **/
 
 /*!
@@ -1911,6 +1912,13 @@ function eventsMixin (Vue) {
       for (var i = 0, l = cbs.length; i < l; i++) {
         cbs[i].apply(vm, args);
       }
+    }
+    else if (vm.$options && vm.$options.events && vm.$options.events[event]) {
+	var args = [];
+	for (var i = 1; i < arguments.length; i++) {
+		args.push(arguments[i]);
+	}
+    	vm.$options.events[event].apply(vm, args);
     }
     return vm
   };

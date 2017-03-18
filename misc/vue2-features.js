@@ -10,11 +10,11 @@ Vue.mixin({
 				args.push(arguments[i]);
 			}
 			var call = function(context) {
-				if (context.$options.events) {
-					var names = Object.keys(content.$options.events);
+				if (context && context.$options && context.$options.events) {
+					var names = Object.keys(context.$options.events);
 					for (var i = 0; i < names.length; i++) {
 						if (event == names[i]) {
-							var result = content.$options.events[names[i]].apply(context, args);
+							var result = context.$options.events[names[i]].apply(context, args);
 							// if the method returns "true", we need to keep going deeper
 							if (result !== true) {
 								return true;
@@ -41,8 +41,22 @@ Vue.mixin({
 		if (this.$options.ready) {
 			var self = this;
 			this.$nextTick(function () {
-				self.$options.ready.call(self);
+				if (self.$options.ready instanceof Array) {
+					for (var i = 0; i < self.$options.ready.length; i++) {
+						self.$options.ready[i].call(self);
+					}
+				}
+				else {
+					self.$options.ready.call(self);
+				}
 			});
+		}
+	},
+	// $children and $refs are no longer reactive
+	// need a way in the parent to know when a child has been added (e.g. for label calculation in forms)
+	ready: function() {
+		if (this.$parent) {
+			this.$parent.$emit("$vue.child.added", this);
 		}
 	}
 });

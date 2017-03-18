@@ -10,7 +10,7 @@ Vue.directive("timeout", {
 		if (binding.modifiers) {
 			keys = Object.keys(binding.modifiers);
 		}
-		var timeout = 300;
+		var timeout = 600;
 		var handle = null;
 		if (keys) {
 			for (var i = 0; i < keys.length; i++) {
