@@ -1,61 +1,6 @@
 {
 	"name": "js-vue-utils", 
 	"resources": {
-		"components": {
-			"messages": {
-				"messages.js": {
-					"url": "components/messages/messages.js"
-				}, 
-				"messages.tpl": {
-					"url": "components/messages/messages.tpl"
-				}
-			}
-		}, 
-		"form": {
-			"components": {
-				"section": {
-					"section.js": {
-						"url": "form/components/section/section.js"
-					}, 
-					"section.tpl": {
-						"url": "form/components/section/section.tpl"
-					}
-				}, 
-				"text": {
-					"text.tpl": {
-						"url": "form/components/text/text.tpl"
-					}, 
-					"text.js": {
-						"url": "form/components/text/text.js"
-					}
-				}
-			}, 
-			"plain": {
-				"form.gcss": {
-					"url": "form/plain/form.gcss"
-				}, 
-				"form.tpl": {
-					"url": "form/plain/form.tpl"
-				}, 
-				"form.js": {
-					"url": "form/plain/form.js"
-				}
-			}, 
-			"table": {
-				"table.gcss": {
-					"url": "form/table/table.gcss"
-				}, 
-				"table.tpl": {
-					"url": "form/table/table.tpl"
-				}, 
-				"table.js": {
-					"url": "form/table/table.js"
-				}
-			}, 
-			"form-utils.js": {
-				"url": "form/form-utils.js"
-			}
-		}, 
 		"directives": {
 			"sticky-header": {
 				"sticky-header.css": {
