@@ -13,6 +13,9 @@
 			"auto-close.js": {
 				"url": "directives/auto-close.js"
 			}, 
+			"group.js": {
+				"url": "directives/group.js"
+			}, 
 			"timeout.js": {
 				"url": "directives/timeout.js"
 			}, 
