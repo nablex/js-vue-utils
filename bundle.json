@@ -25,7 +25,8 @@
 		}, 
 		"vue": {
 			"vue.js": {
-				"url": "vue/vue.js"
+				"url": "vue/vue.js", 
+				"template": false
 			}
 		}, 
 		"cms": {
