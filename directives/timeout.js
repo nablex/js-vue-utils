@@ -23,8 +23,10 @@ Vue.directive("timeout", {
 			}
 		}
 		
-		element["$n-timeout-handle"] = null;
-		element["$n-timeout-handler"] = function() {
+		var target = element.__vue__ ? element.__vue__ : element;
+
+		target["$n-timeout-handle"] = null;
+		target["$n-timeout-handler"] = function() {
 			if (handle != null) {
 				if (nabu.tmp.timeouts[handle] != null) {
 					clearTimeout(nabu.tmp.timeouts[handle]);
@@ -44,11 +46,23 @@ Vue.directive("timeout", {
 				element["$n-timeout-handle"] = timer;
 			}
 		};
-		element.addEventListener(binding.arg, element["$n-timeout-handler"]);
+		
+		if (element.__vue__) {
+			target.$on(binding.arg, target["$n-timeout-handler"]);
+		}
+		else {
+			element.addEventListener(binding.arg, target["$n-timeout-handler"]);
+		}
 	},
 	unbind: function(element, binding) {
-		if (element["$n-timeout-handler"]) {
-			element.removeEventListener(binding.arg, element["$n-timeout-handler"]);
+		var target = element.__vue__ ? element.__vue__ : element;
+		if (target["$n-timeout-handler"]) {
+			if (element.__vue__) {
+				target.$off(binding.arg, target["$n-timeout-handler"]);
+			}
+			else {
+				element.removeEventListener(binding.arg, target["$n-timeout-handler"]);
+			}
 		}
 	}
 });
