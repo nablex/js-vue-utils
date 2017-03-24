@@ -71,26 +71,30 @@ Vue.directive("group", {
 
 Vue.mixin({
 	beforeDestroy: function() {
-		var removeFromGroups = function(component) {
-			for (var key in nabu.tmp.groups) {
-				var index = nabu.tmp.groups[key].indexOf(component);
-				if (index >= 0) {
-					console.log("UNBINDING", component);
-					nabu.tmp.groups[key].splice(index, 1);
-					for (var i = 0; i < nabu.tmp.groups[key].length; i++) {
-						nabu.tmp.groups[key][i].$emit("$vue.group.removed", component);
+		if (Object.keys(nabu.tmp.groups).length) {
+			var removeFromGroups = function(component) {
+				for (var key in nabu.tmp.groups) {
+					var index = nabu.tmp.groups[key].indexOf(component);
+					if (index >= 0) {
+						nabu.tmp.groups[key].splice(index, 1);
+						for (var i = 0; i < nabu.tmp.groups[key].length; i++) {
+							nabu.tmp.groups[key][i].$emit("$vue.group.removed", component);
+						}
+						if (!nabu.tmp.groups[key].length) {
+							delete nabu.tmp.groups[key];
+						}
 					}
 				}
 			}
-		}
 		
-		var recurse = function(component) {
-			removeFromGroups(component);
-			for (var i = 0; i < component.$children.length; i++) {
-				recurse(component.$children[i]);
+			var recurse = function(component) {
+				removeFromGroups(component);
+				for (var i = 0; i < component.$children.length; i++) {
+					recurse(component.$children[i]);
+				}
 			}
-		}
 		
-		recurse(this);
+			recurse(this);
+		}
 	}
 });
