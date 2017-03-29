@@ -80,9 +80,6 @@ Vue.mixin({
 						for (var i = 0; i < nabu.tmp.groups[key].length; i++) {
 							nabu.tmp.groups[key][i].$emit("$vue.group.removed", component);
 						}
-						if (!nabu.tmp.groups[key].length) {
-							delete nabu.tmp.groups[key];
-						}
 					}
 				}
 			}

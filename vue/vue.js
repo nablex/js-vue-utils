@@ -4,6 +4,7 @@ Slightly customized version of vue, changes are:
 - allow vm on document.body (line 9120+)
 - expose the observe method in the public API to build services with observable state (line 4063)
 - updated $emit to check for events {} like in vue1 (line 1917)
+- line 406: check that not undefined (should check wherever it is being called but not sure which line is causing issues)
 **/
 
 /*!
@@ -403,7 +404,7 @@ var devtools = inBrowser && window.__VUE_DEVTOOLS_GLOBAL_HOOK__;
 
 /* istanbul ignore next */
 function isNative (Ctor) {
-  return /native code/.test(Ctor.toString())
+  return typeof(Ctor) !== 'undefined' && /native code/.test(Ctor.toString())
 }
 
 var hasSymbol =

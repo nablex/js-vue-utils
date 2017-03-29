@@ -43,6 +43,9 @@
 			}, 
 			"render.js": {
 				"url": "misc/render.js"
+			}, 
+			"observable.js": {
+				"url": "misc/observable.js"
 			}
 		}
 	}

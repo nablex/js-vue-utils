@@ -58,5 +58,9 @@ Vue.mixin({
 		if (this.$parent) {
 			this.$parent.$emit("$vue.child.added", this);
 		}
+	},
+	computed: {
+		$window: function() { return window },
+		$document: function() { return document }
 	}
 });
