@@ -18,11 +18,10 @@ Vue.directive("auto-close", {
 				binding.value();
 			}
 		};
-		window.addEventListener("click", element["$n-auto-close-listener"]);
+		window.addEventListener("click", element["$n-auto-close-listener"], true);
 	},
 	unbind: function(element) {
 		if (element["$n-auto-close-listener"]) {
-			console.log("Removing auto-close event listener");
 			window.removeEventListener("click", element["$n-auto-close-listener"]);
 		}
 	}
