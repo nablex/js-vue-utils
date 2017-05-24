@@ -1,7 +1,7 @@
 // this directive takes a header (presumed at the top of the page) and will slide it away when you scroll down
 // the first time you scroll up however, the menu pops back up
 Vue.directive("sticky-header", {
-	bind: function(element) {
+	bind: function(element, binding) {
 		element.setAttribute("n-sticky-header", "true");
 		var previousScrollTop = document.body.scrollTop;
 		var height = element.getBoundingClientRect().height;
@@ -14,7 +14,7 @@ Vue.directive("sticky-header", {
 				element.style.top = "0px";
 			}
 			else {
-				element.style.top = "-" + height + "px";
+				element.style.top = "-" + (binding.value ? binding.value : height) + "px";
 			}
 			previousScrollTop = document.body.scrollTop;
 		};

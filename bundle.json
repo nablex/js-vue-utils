@@ -16,6 +16,9 @@
 			"group.js": {
 				"url": "directives/group.js"
 			}, 
+			"route-render.js": {
+				"url": "directives/route-render.js"
+			}, 
 			"timeout.js": {
 				"url": "directives/timeout.js"
 			}, 

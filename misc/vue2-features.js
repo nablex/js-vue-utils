@@ -31,8 +31,8 @@ Vue.mixin({
 			call(this);
 		},
 		$remove: function() {
-			if (this.$el) {
-				this.$el.remove();
+			if (this.$el && this.$el.parentNode) {
+				this.$el.parentNode.removeChild(this.$el);
 			}
 		}
 	},

@@ -13,6 +13,7 @@ nabu.utils.vue.render = function(parameters) {
 	if (!anchor) {
 		anchor = document.getElementById(parameters.target);
 	}
+	var element = anchor.$el ? anchor.$el : anchor;
 	var component = parameters.content;
 	// if we have a return value, we need to add it to the anchor
 	if (component) {
@@ -24,14 +25,33 @@ nabu.utils.vue.render = function(parameters) {
 			component = new extended({ data: parameters });
 		}
 		else if (component instanceof Function) {
-			component = component();
+			component = component(element);
 		}
 		// a function to complete the appending of the component to the anchor
 		var complete = function(resolvedContent) {
+			if (component.$mount) {
+				if (!component.$parent) {
+					var possible = element;
+					while (possible && !possible.__vue__) {
+						possible = possible.parentNode;
+					}
+					if (possible && possible.__vue__) {
+						component.$parent = possible.__vue__;
+					}
+				}
+			}
+			var mounted = null;
+			if (!component.$el) {
+				mounted = component.$mount();
+			}
+			else {
+				component.$remove();
+				mounted = component;
+			}
+
 			if (resolvedContent) {
 				component = resolvedContent;
 			}
-			var element = anchor.$el ? anchor.$el : anchor;
 			// unless we explicitly want to append content, wipe the current content
 			if (!parameters.append) {
 				if (anchor.clear) {
@@ -73,22 +93,18 @@ nabu.utils.vue.render = function(parameters) {
 		};
 		// it's a vue component
 		if (component.$mount) {
-			var mounted = null;
-			if (!component.$el) {
-				mounted = component.$mount();
-			}
-			else {
-				component.$remove();
-				mounted = component;
-			}
 			// if we have an activate method, call it, it can perform asynchronous actions
-			if (mounted.$options.activate) {
-				if (mounted.$options.activate instanceof Array) {
+			if (component && component.$options && component.$options.activate) {
+				// if we are going to do asynchronous stuff, have the option for a loader
+				if (parameters.loader) {
+					parameters.loader(element);
+				}
+				if (component.$options.activate instanceof Array) {
 					// TODO: loop over them and use a combined promise
-					mounted.$options.activate[0].call(component, complete);
+					component.$options.activate[0].call(component, complete);
 				}
 				else {
-					mounted.$options.activate.call(component, complete);
+					component.$options.activate.call(component, complete);
 				}
 			}
 			else {
