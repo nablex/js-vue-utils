@@ -5,6 +5,8 @@ Slightly customized version of vue, changes are:
 - expose the observe method in the public API to build services with observable state (line 4063)
 - updated $emit to check for events {} like in vue1 (line 1917)
 - line 406: check that not undefined (should check wherever it is being called but not sure which line is causing issues)
+- line 1499: disable proxy when doing server-side rendering, it is not correctly implemented in htmlunit
+
 **/
 
 /*!
@@ -1495,6 +1497,10 @@ var initProxy;
   var hasProxy =
     typeof Proxy !== 'undefined' &&
     Proxy.toString().match(/native code/);
+    
+  if (navigator.userAgent.match(/Nabu-Renderer/)) {
+  	hasProxy = false;
+  }
 
   if (hasProxy) {
     var isBuiltInModifier = makeMap('stop,prevent,self,ctrl,shift,alt,meta');

@@ -10,11 +10,9 @@ nabu.services.VueRouter = function(parameters) {
 	this.router = new nabu.services.Router(parameters);
 
 	this.route = function(alias, parameters, anchor, mask) {
-		this.initialize();
 		self.router.route(alias, parameters, anchor, mask);
 	}
 	this.routeInitial = function(anchor) {
-		this.initialize();
 		this.router.routeInitial(anchor);
 	};
 	this.register = function(route) {
@@ -68,30 +66,6 @@ nabu.services.VueRouter = function(parameters) {
 		};
 		return route;
 	};
-
-	this.initialize = function() {
-		// make sure we register the body anchor
-		if (!nabu.state.anchors) {
-			nabu.state.anchors = [];
-		}
-		// register the body as an anchor
-		if (!nabu.utils.anchors.find("body")) {
-			nabu.state.anchors.push({
-				id: "body",
-				$el: document.body,
-				clear: function() {
-					var childNodes = this.$el.childNodes;
-					for (var i = childNodes.length - 1; i >= 0; i--) {
-						if (!childNodes[i].tagName || childNodes[i].tagName.toLowerCase() != "template") {
-							this.$el.removeChild(childNodes[i]);
-						}
-					}
-				},
-				show: function() {},
-				hide: function() {}
-			});
-		}
-	}
 }
 
 nabu.components.Anchor = Vue.component("anchor", {
