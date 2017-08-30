@@ -20,6 +20,9 @@ nabu.services.VueRouter = function(parameters) {
 		self.router.register(route);
 		return route;
 	};
+	this.template = function(alias, parameters) {
+		return self.router.template(alias, parameters);
+	};
 	this.create = function(route) {
 		if (route.enter) {
 			var originalEnter = route.enter;
