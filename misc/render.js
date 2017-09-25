@@ -103,31 +103,43 @@ nabu.utils.vue.render = function(parameters) {
 				parameters.activate(component);
 			}
 			// if we have an activate method, call it, it can perform asynchronous actions
-			if (component && component.$options && component.$options.activate) {
+			if (component && component.$options && (component.$options.activate || component.$options.initialize)) {
 				// if we are going to do asynchronous stuff, have the option for a loader
 				if (parameters.loader) {
 					parameters.loader(element);
 				}
-				if (component.$options.activate instanceof Array) {
-					var promises = [];
-					var process = function(activation) {
-						var promise = new nabu.utils.promise();
-						promises.push(promise);
-						var done = function(result) {
-							promise.resolve(result);
-						};
-						activation.call(component, done);
+				var promises = [];
+				var process = function(method) {
+					var promise = new nabu.utils.promise();
+					promises.push(promise);
+					var done = function(result) {
+						promise.resolve(result);
+					};
+					method.call(component, done);
+				}
+				if (component.$options.initialize instanceof Array) {
+					for (var i = 0; i < component.$options.initialize.length; i++) {
+						process(component.$options.initialize[i]);
 					}
-					for (var i = 0; i < component.$options.activate.length; i++) {
-						process(component.$options.activate[i]);
+				}
+				else if (component.$options.initialize) {
+					process(component.$options.initialize);
+				}
+				// we wait for all initialization to be done before the activate kicks in
+				new nabu.utils.promises(promises).then(function() {
+					promises = [];
+					if (component.$options.activate instanceof Array) {
+						for (var i = 0; i < component.$options.activate.length; i++) {
+							process(component.$options.activate[i]);
+						}
+					}
+					else if (component.$options.activate) {
+						process(component.$options.activate);
 					}
 					new nabu.utils.promises(promises).then(function(x) {
 						complete();
 					});
-				}
-				else {
-					component.$options.activate.call(component, complete);
-				}
+				});
 			}
 			else {
 				complete();

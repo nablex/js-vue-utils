@@ -35,7 +35,9 @@ nabu.services.VueService = function(component, parameters) {
 				}
 			}
 			else {
-				return instance;
+				var promise = $services.q.defer();
+				promise.resolve(instance);
+				return promise;
 			}
 		};
 		
@@ -43,7 +45,15 @@ nabu.services.VueService = function(component, parameters) {
 			var instance = new component({ data: { "$services": $services }});
 			if (parameters && parameters.lazy) {
 				instance.$lazy = function() {
-					return activate(instance);
+					if (!instance.$lazyInitialized) {
+						instance.$lazyInitialized = new Date();
+						return activate(instance);
+					}
+					else {
+						var promise = $services.q.defer();
+						promise.resolve(instance);
+						return promise;
+					}
 				};
 			}
 			if (!parameters || !parameters.lazy) {
@@ -73,7 +83,7 @@ nabu.services.VueService = function(component, parameters) {
 
 // mixin an activation sequence for lazy service loading
 Vue.mixin({
-	activate: function(done) {
+	initialize: function(done) {
 		if (this.$options.services) {
 			if (!this.$services) {
 				throw "No service provider found";
@@ -89,7 +99,6 @@ Vue.mixin({
 					target = target[name[j]];
 				}
 				if (!target.$lazyInitialized && target.$lazy) {
-					target.$lazyInitialized = new Date();
 					var result = target.$lazy();
 					if (result.then) {
 						promises.push(result); 
