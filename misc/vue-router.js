@@ -10,7 +10,7 @@ nabu.services.VueRouter = function(routerParameters) {
 	this.router = new nabu.services.Router(routerParameters);
 
 	this.route = function(alias, parameters, anchor, mask) {
-		self.router.route(alias, parameters, anchor, mask);
+		return self.router.route(alias, parameters, anchor, mask);
 	}
 	this.routeInitial = function(anchor) {
 		this.router.routeInitial(anchor);
@@ -98,7 +98,11 @@ nabu.services.VueRouter = function(routerParameters) {
 		}
 		var originalLeave = route.leave;
 		route.leave = function(anchorName, currentParameters, newRoute, newParameters) {
-			if (route.$lastInstances && route.$lastInstances[anchorName] && route.$lastInstances[anchorName].$options.beforeDestroy) {
+			if (route.$lastInstances && route.$lastInstances[anchorName] && route.$lastInstances[anchorName].$destroy) {
+				route.$lastInstances[anchorName].$destroy();
+				route.$lastInstances[anchorName] = null;
+			}
+			else if (route.$lastInstances && route.$lastInstances[anchorName] && route.$lastInstances[anchorName].$options.beforeDestroy) {
 				if (route.$lastInstances[anchorName].$options.beforeDestroy instanceof Array) {
 					for (var i = 0; i < route.$lastInstances[anchorName].$options.beforeDestroy.length; i++) {
 						route.$lastInstances[anchorName].$options.beforeDestroy[i].call(route.$lastInstances[anchorName]);

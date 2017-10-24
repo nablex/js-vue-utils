@@ -15,6 +15,13 @@ Vue.directive("route", {
 		if (element.tagName.toLowerCase() == "a") {
 			element.setAttribute("href", url);
 //			element.setAttribute("href", "javascript:void(0)");
+			// internet explorer and edge do _not_ send out a popstate event when we change the hash with a href
+			// for this reason we register an onclick that is executed before the href and returns false to stop the default href behavior
+			// this gives us clean hrefs for server-side rendering / social media sharing / ... yet a functional route change in all browsers
+			element.onclick = function(event) {
+				vnode.context.$services.router.route(binding.arg, binding.value, keys && keys.length ? keys[0] : null);
+				return false;
+			};
 		}
 		else {
 			element.addEventListener("click", function(event) {

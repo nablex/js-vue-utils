@@ -12,26 +12,30 @@ nabu.services.VueService = function(component, parameters) {
 			if (instance.$options && instance.$options.activate) {
 				if (instance.$options.activate instanceof Array) {
 					var promises = [];
+					var resultingService = null;
 					var process = function(activation) {
 						var promise = $services.q.defer();
 						promises.push(promise);
 						var done = function(result) {
 							promise.resolve(result);
+							if (result) {
+								resultingService = result;
+							}
 						};
 						activation.call(instance, done);
 					}
 					for (var i = 0; i < instance.$options.activate.length; i++) {
 						process(instance.$options.activate[i]);
 					}
-					return $services.q.defer($services.q.all(promises), instance);
+					return $services.q.defer($services.q.all(promises), resultingService ? resultingService : instance);
 				}
 				else {
 					var promise = $services.q.defer();
 					var done = function(result) {
-						promise.resolve(result);
+						promise.resolve(result ? result : instance);
 					};
 					instance.$options.activate.call(instance, done);
-					return $services.q.defer(promise, instance);
+					return promise;
 				}
 			}
 			else {
@@ -57,7 +61,29 @@ nabu.services.VueService = function(component, parameters) {
 				};
 			}
 			if (!parameters || !parameters.lazy) {
-				return activate(instance);
+				// if we have service dependencies, make sure they are loaded first
+				if (instance.$options.services && instance.$options.services.length) {
+					var promises = [];
+					for (var i = 0; i < instance.$options.services.length; i++) {
+						var promise = $services.$promises[instance.$options.services[i]];
+						if (!promise) {
+							throw "Could not find service dependency: " + instance.$options.services[i];
+						}
+						promises.push(promise);
+					}
+					var promise = new nabu.utils.promise();
+					new nabu.utils.promises(promises).then(function() {
+						// create a new instance
+						// this service may have dependencies in the form of watchers, computed properties... to remote services
+						// these are not set up correctly if they are not available at creation time
+						instance = new component({ data: { "$services": $services }});
+						activate(instance).then(promise, promise);
+					});
+					return promise;
+				}
+				else {
+					return activate(instance);
+				}
 			}
 			else {
 				return instance;

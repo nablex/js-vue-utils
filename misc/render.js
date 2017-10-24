@@ -20,6 +20,21 @@ nabu.utils.vue.render = function(parameters) {
 		throw "Target not found: " + parameters.target + " in: " + document.body.innerHTML;
 	}
 	var element = anchor.$el ? anchor.$el : anchor;
+	if (!parameters.append) {
+		var destroy = function(element) {
+			for (var i = 0; i < element.childNodes.length; i++) {
+				// first recursively destroy any vms that might exist
+				if (element.childNodes[i].nodeType == 1) {
+					destroy(element.childNodes[i]);
+				}
+			}
+			// then destroy the vm itself (if there is one)
+			if (element.__vue__ && element.__vue__.$destroy) {
+				element.__vue__.$destroy();
+			}
+		}
+	}
+	destroy(element);
 	var component = parameters.content;
 	// if we have a return value, we need to add it to the anchor
 	if (component) {
@@ -46,6 +61,15 @@ nabu.utils.vue.render = function(parameters) {
 					}
 				}
 			}
+			// unless we explicitly want to append content, wipe the current content
+			if (!parameters.append) {
+				if (anchor.clear) {
+					anchor.clear();
+				}
+				else if (element) {
+					nabu.utils.elements.clear(element);
+				}
+			}
 			var mounted = null;
 			if (!component.$el) {
 				mounted = component.$mount();
@@ -57,15 +81,6 @@ nabu.utils.vue.render = function(parameters) {
 
 			if (resolvedContent) {
 				component = resolvedContent;
-			}
-			// unless we explicitly want to append content, wipe the current content
-			if (!parameters.append) {
-				if (anchor.clear) {
-					anchor.clear();
-				}
-				else if (element) {
-					nabu.utils.elements.clear(element);
-				}
 			}
 			if (parameters.prepare) {
 				parameters.prepare(element, component);

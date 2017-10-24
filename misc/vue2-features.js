@@ -1,3 +1,13 @@
+var vi = function(element) {
+	if (typeof(element) == "string") {
+		element = document.querySelector(element);
+	}
+	while (element && !element.__vue__) {
+		element = element.parentNode;
+	}
+	return element ? element.__vue__ : null;
+}
+
 Vue.mixin({
 	methods: {
 		// re-add the $appendTo, the router depends on it
