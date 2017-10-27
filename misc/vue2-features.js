@@ -8,6 +8,23 @@ var vi = function(element) {
 	return element ? element.__vue__ : null;
 }
 
+Vue.config.optionMergeStrategies.activate = function (toVal, fromVal) {
+	var result = [];
+	if (fromVal instanceof Array) {
+		nabu.utils.arrays.merge(result, fromVal);
+	}
+	else if (fromVal) {
+		result.push(fromVal);
+	}
+	if (toVal instanceof Array) {
+		nabu.utils.arrays.merge(result, toVal);
+	}
+	else if (toVal) {
+		result.push(toVal);
+	}
+	return result;
+}
+
 Vue.mixin({
 	methods: {
 		// re-add the $appendTo, the router depends on it

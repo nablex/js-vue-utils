@@ -12,22 +12,30 @@ nabu.services.VueService = function(component, parameters) {
 			if (instance.$options && instance.$options.activate) {
 				if (instance.$options.activate instanceof Array) {
 					var promises = [];
-					var resultingService = null;
 					var process = function(activation) {
 						var promise = $services.q.defer();
 						promises.push(promise);
 						var done = function(result) {
 							promise.resolve(result);
-							if (result) {
-								resultingService = result;
-							}
 						};
 						activation.call(instance, done);
 					}
 					for (var i = 0; i < instance.$options.activate.length; i++) {
 						process(instance.$options.activate[i]);
 					}
-					return $services.q.defer($services.q.all(promises), resultingService ? resultingService : instance);
+					var resultingPromise = $services.q.defer();
+					$services.q.all(promises).then(function(x) {
+						var resultingService = null;
+						if (x) {
+							for (var i = 0; i < x.length; i++) {
+								if (x[i]) {
+									resultingService = x[i];
+								}
+							}
+						}
+						resultingPromise.resolve(resultingService ? resultingService : instance);
+					}, resultingPromise);
+					return resultingPromise;
 				}
 				else {
 					var promise = $services.q.defer();

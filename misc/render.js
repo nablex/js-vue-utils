@@ -124,7 +124,7 @@ nabu.utils.vue.render = function(parameters) {
 					parameters.loader(element);
 				}
 				var promises = [];
-				var process = function(method) {
+				var process = function(method, promises) {
 					var promise = new nabu.utils.promise();
 					promises.push(promise);
 					var done = function(result) {
@@ -134,22 +134,22 @@ nabu.utils.vue.render = function(parameters) {
 				}
 				if (component.$options.initialize instanceof Array) {
 					for (var i = 0; i < component.$options.initialize.length; i++) {
-						process(component.$options.initialize[i]);
+						process(component.$options.initialize[i], promises);
 					}
 				}
 				else if (component.$options.initialize) {
-					process(component.$options.initialize);
+					process(component.$options.initialize, promises);
 				}
 				// we wait for all initialization to be done before the activate kicks in
 				new nabu.utils.promises(promises).then(function() {
 					promises = [];
 					if (component.$options.activate instanceof Array) {
 						for (var i = 0; i < component.$options.activate.length; i++) {
-							process(component.$options.activate[i]);
+							process(component.$options.activate[i], promises);
 						}
 					}
 					else if (component.$options.activate) {
-						process(component.$options.activate);
+						process(component.$options.activate, promises);
 					}
 					new nabu.utils.promises(promises).then(function(x) {
 						complete();
