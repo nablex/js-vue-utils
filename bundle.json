@@ -28,6 +28,9 @@
 			"content.js": {
 				"url": "directives/content.js"
 			}, 
+			"fixed-header.js": {
+				"url": "directives/fixed-header.js"
+			}, 
 			"css.js": {
 				"url": "directives/css.js"
 			}, 
