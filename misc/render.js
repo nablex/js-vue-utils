@@ -50,6 +50,13 @@ nabu.utils.vue.render = function(parameters) {
 		}
 		// a function to complete the appending of the component to the anchor
 		var complete = function(resolvedContent) {
+			// call the activated hook before we start mounting
+			if (component.$options.activated) {
+				var activated = component.$options.activated instanceof Array ? component.$options.activated : [component.$options.activated];
+				for (var i = 0; i < activated.length; i++) {
+					activated[i].call(component);
+				}
+			}
 			if (component.$mount) {
 				if (!component.$parent) {
 					var possible = element;
