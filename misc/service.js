@@ -80,11 +80,13 @@ nabu.services.VueService = function(component, parameters) {
 						promises.push(promise);
 					}
 					var promise = new nabu.utils.promise();
+					promise.stage(instance);
 					new nabu.utils.promises(promises).then(function() {
 						// create a new instance
 						// this service may have dependencies in the form of watchers, computed properties... to remote services
 						// these are not set up correctly if they are not available at creation time
-						instance = new component({ data: { "$services": $services }});
+						// @2017-11-07: we use promise staging now to preemtively send back the instance preventing the need for double creation
+						//instance = new component({ data: { "$services": $services }});
 						activate(instance).then(promise, promise);
 					});
 					return promise;
