@@ -6,9 +6,15 @@ Vue.directive("action", {
 			element.setAttribute("disabled", "disabled");
 			var result = binding.value(event);
 			if (result && result.then) {
-				result.then(function() {
+				var span = document.createElement("span");
+				span.setAttribute("class", "n-icon n-icon-spinner");
+				span.setAttribute("style", "display: inline-block; text-align: center");
+				element.appendChild(span);
+				var handler = function() {
 					element.removeAttribute("disabled");
-				});
+					element.removeChild(span);
+				};
+				result.then(handler, handler);
 			}
 			else {
 				element.removeAttribute("disabled");
