@@ -8,7 +8,7 @@ Slightly customized version of vue, changes are:
 - line 1499: disable proxy when doing server-side rendering, it is not correctly implemented in htmlunit
 - expose initWatch and initComputed in util, need to be able to initialize versions that wait for asynchronous data to be loaded
 	- line 2741: make sure we don't overwrite the computed watchers because we now have a two-phase computed property
-- 7291: added decoding support for quotation mark
+- 4330: added function decodeCustom to decode our encoded single quotes (through translations) because they can appear anywhere, including in interpreted attributes with ternaries
 
 **/
 
@@ -4327,12 +4327,16 @@ function createElement$1 (tagName, vnode) {
   return elm
 }
 
+function decodeCustom(text) {
+	return text ? text.replace("&#39;", "'") : text;
+}
+
 function createElementNS (namespace, tagName) {
   return document.createElementNS(namespaceMap[namespace], tagName)
 }
 
 function createTextNode (text) {
-  return document.createTextNode(text)
+  return document.createTextNode(decodeCustom(text))
 }
 
 function createComment (text) {
@@ -4364,11 +4368,11 @@ function tagName (node) {
 }
 
 function setTextContent (node, text) {
-  node.textContent = text;
+  node.textContent = decodeCustom(text);
 }
 
 function setAttribute (node, key, val) {
-  node.setAttribute(key, val);
+  node.setAttribute(key, decodeCustom(val));
 }
 
 
@@ -5218,7 +5222,7 @@ function setAttr (el, key, value) {
     if (isFalsyAttrValue(value)) {
       el.removeAttribute(key);
     } else {
-      el.setAttribute(key, value);
+      el.setAttribute(key, decodeCustom(value));
     }
   }
 }
@@ -7297,8 +7301,8 @@ var decodingMap = {
   '&#10;': '\n',
   '&#39;': '\''
 };
-var encodedAttr = /&(?:lt|gt|quot|amp|#39);/g;
-var encodedAttrWithNewLines = /&(?:lt|gt|quot|amp|#10|#39);/g;
+var encodedAttr = /&(?:lt|gt|quot|amp);/g;
+var encodedAttrWithNewLines = /&(?:lt|gt|quot|amp|#10);/g;
 
 function decodeAttr (value, shouldDecodeNewlines) {
   var re = shouldDecodeNewlines ? encodedAttrWithNewLines : encodedAttr;
