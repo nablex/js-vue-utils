@@ -4328,7 +4328,7 @@ function createElement$1 (tagName, vnode) {
 }
 
 function decodeCustom(text) {
-	return text ? text.replace("&#39;", "'") : text;
+	return text && text.replace ? text.replace("&#39;", "'") : text;
 }
 
 function createElementNS (namespace, tagName) {
