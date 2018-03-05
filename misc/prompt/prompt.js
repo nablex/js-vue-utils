@@ -2,7 +2,7 @@ if (!nabu) { var nabu = {}; }
 if (!nabu.utils) { nabu.utils = {}; }
 if (!nabu.utils.vue) { nabu.utils.vue = {}; }
 
-nabu.utils.vue.prompt = function(render) {
+nabu.utils.vue.prompt = function(render, parameters) {
 	
 	var root = document.createElement("div");
 	root.setAttribute("class", "n-prompt");
@@ -30,6 +30,11 @@ nabu.utils.vue.prompt = function(render) {
 	});
 	
 	var promise = new nabu.utils.promise();
+	
+	if (parameters && parameters.slow) {
+		this.$render({ target: container, content: new nabu.views.cms.core.Loader() });
+	}
+	
 	this.$render({ target: container, content: render, activate: function(component) {
 		component.$resolve = function(object) {
 			document.body.removeChild(root);

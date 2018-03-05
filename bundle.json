@@ -13,6 +13,9 @@
 			"action.js": {
 				"url": "directives/action.js"
 			}, 
+			"select-on.js": {
+				"url": "directives/select-on.js"
+			}, 
 			"auto-close.js": {
 				"url": "directives/auto-close.js"
 			}, 
