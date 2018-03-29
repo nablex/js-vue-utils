@@ -65,17 +65,65 @@ nabu.utils.vue.confirm = function(parameters) {
 					ok: null,
 					cancel: null,
 					type: null,
-					message: null
+					message: null,
+					rejectable: true
+				}
+			},
+			methods: {
+				resolve: function() {
+					this.$resolve();
+				}
+			}
+		});
+		return new component({ data: parameters });
+	});
+};
+
+nabu.utils.vue.wait = function(parameters) {
+	return nabu.utils.vue.prompt.bind(this)(function() {
+		var component = Vue.extend({ 
+			template: "#n-confirm",
+			data: function() {
+				return {
+					title: null,
+					ok: null,
+					cancel: null,
+					type: null,
+					message: null,
+					rejectable: false,
+					failed: false
+				}
+			},
+			activate: function(done) {
+				var self = this;
+				parameters.promise.then(function() {
+					nabu.utils.objects.merge(self, parameters.success);
+					done();
+				}, function() {
+					nabu.utils.objects.merge(self, parameters.failure);
+					self.failed = true;
+					done();
+				});
+			},
+			methods: {
+				resolve: function() {
+					if (this.failed) {
+						this.$reject();
+					}
+					else {
+						this.$resolve();
+					}
 				}
 			}
 		});
 		return new component({ data: parameters});
-	});
+	}, { slow: true });
 };
 
 Vue.mixin({
 	computed: {
 		$prompt: function() { return nabu.utils.vue.prompt },
-		$confirm: function() { return nabu.utils.vue.confirm }
+		$confirm: function() { return nabu.utils.vue.confirm },
+		$wait: function() { return nabu.utils.vue.wait }
 	}
 });

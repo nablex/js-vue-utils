@@ -22,6 +22,7 @@ nabu.services.VueRouter = function(routerParameters) {
 		self.router.register(route);
 		return route;
 	};
+	this.unregister = this.router.unregister;
 	this.template = function(alias, parameters) {
 		return self.router.template(alias, parameters);
 	};
