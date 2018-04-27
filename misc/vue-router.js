@@ -15,6 +15,7 @@ nabu.services.VueRouter = function(routerParameters) {
 	this.routeInitial = function(anchor) {
 		this.router.routeInitial(anchor);
 	};
+	this.updateUrl = this.router.updateUrl;
 	this.routeAll = this.router.routeAll;
 	this.bookmark = this.router.bookmark;
 	this.register = function(route) {
@@ -101,21 +102,6 @@ nabu.services.VueRouter = function(routerParameters) {
 		}
 		var originalLeave = route.leave;
 		route.leave = function(anchorName, currentParameters, newRoute, newParameters) {
-			if (route.$lastInstances && route.$lastInstances[anchorName] && route.$lastInstances[anchorName].$destroy) {
-				route.$lastInstances[anchorName].$destroy();
-				route.$lastInstances[anchorName] = null;
-			}
-			else if (route.$lastInstances && route.$lastInstances[anchorName] && route.$lastInstances[anchorName].$options.beforeDestroy) {
-				if (route.$lastInstances[anchorName].$options.beforeDestroy instanceof Array) {
-					for (var i = 0; i < route.$lastInstances[anchorName].$options.beforeDestroy.length; i++) {
-						route.$lastInstances[anchorName].$options.beforeDestroy[i].call(route.$lastInstances[anchorName]);
-					}
-				}
-				else {
-					route.$lastInstances[anchorName].$options.beforeDestroy.call(route.$lastInstances[anchorName]);
-				}
-				route.$lastInstances[anchorName] = null;
-			}
 			var anchor = nabu.utils.anchors.find(anchorName);
 			if (anchor) {
 				for (var i = 0; i < anchor.$el.attributes.length; i++) {

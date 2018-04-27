@@ -33,8 +33,8 @@ nabu.utils.vue.render = function(parameters) {
 				element.__vue__.$destroy();
 			}
 		}
+		destroy(element);
 	}
-	destroy(element);
 	var component = parameters.content;
 	// if we have a return value, we need to add it to the anchor
 	if (component) {

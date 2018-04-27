@@ -11,10 +11,13 @@ Vue.directive("content", {
 			content = nabu.utils.elements.sanitize(content);
 		}
 		if (keys && keys.indexOf("compile") >= 0) {
-			content = Vue.extend({
+			var component = Vue.extend({
+				data: function() {
+					return vnode.context.$data;
+				},
 				template: "<div>" + (typeof(content) == "string" ? content : content.innerHTML) + "</div>" 
 			});
-			content = new content();
+			content = new component();
 			content.$mount();
 			element.appendChild(content.$el);
 		}

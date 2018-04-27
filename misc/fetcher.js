@@ -213,6 +213,11 @@ Vue.mixin({
 							return promise;
 						};
 					}
+					if (!promise.resolved) {
+						promise.resolved = function() {
+							return self.$data.$fetched[name];
+						}
+					}
 					return resolve ? self.$data.$fetched[name] : promise;
 				}
 				

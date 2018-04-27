@@ -91,27 +91,30 @@ nabu.utils.vue.wait = function(parameters) {
 					type: null,
 					message: null,
 					rejectable: false,
-					failed: false
+					failed: false,
+					result: null
 				}
 			},
 			activate: function(done) {
 				var self = this;
-				parameters.promise.then(function() {
+				parameters.promise.then(function(result) {
 					nabu.utils.objects.merge(self, parameters.success);
+					self.result = result;
 					done();
-				}, function() {
+				}, function(result) {
 					nabu.utils.objects.merge(self, parameters.failure);
 					self.failed = true;
+					self.result = result;
 					done();
 				});
 			},
 			methods: {
 				resolve: function() {
 					if (this.failed) {
-						this.$reject();
+						this.$reject(this.result);
 					}
 					else {
-						this.$resolve();
+						this.$resolve(this.result);
 					}
 				}
 			}
