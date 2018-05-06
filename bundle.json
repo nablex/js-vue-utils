@@ -60,6 +60,12 @@
 		}, 
 		"misc": {
 			"prompt": {
+				"prompt.sass": {
+					"url": "misc/prompt/prompt.sass"
+				}, 
+				"confirm.sass": {
+					"url": "misc/prompt/confirm.sass"
+				}, 
 				"confirm.gcss": {
 					"url": "misc/prompt/confirm.gcss"
 				}, 
