@@ -19,9 +19,17 @@ Vue.directive("content", function(element, binding, vnode) {
 				.replace(/ /g, "&nbsp;");
 		}
 		if (keys && keys.indexOf("compile") >= 0) {
+			var context = {};
+			Object.keys(vnode.context.$props).map(function(key) {
+				context[key] = vnode.context.$props[key];
+			});
+			// data overwrites props if necessary
+			Object.keys(vnode.context.$data).map(function(key) {
+				context[key] = vnode.context.$data[key];
+			});
 			var component = Vue.extend({
 				data: function() {
-					return vnode.context.$data;
+					return context;
 				},
 				template: "<div>" + (typeof(content) == "string" ? content : content.innerHTML) + "</div>" 
 			});
