@@ -8,14 +8,14 @@ Vue.directive("content", function(element, binding, vnode) {
 	}
 	// always clear the element
 	nabu.utils.elements.clear(element);
-	if (content) {
+	if (content != null && typeof(content) != "undefined") {
 		if (keys && keys.indexOf("sanitize") >= 0) {
 			content = nabu.utils.elements.sanitize(content);
 		}
 		// we interpret this as plain string data, that means making sure everything is escaped and whitespace is adhered to
 		if (keys && keys.indexOf("plain") >= 0) {
 			content = content.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
-				.replace(/\n/g, "<br/>").replace(/\t/g, "&nbsp;&nbsp;&nbsp;&nbsp;")
+				.replace(/[\r\n]+/g, "<br/>").replace(/\t/g, "&nbsp;&nbsp;&nbsp;&nbsp;")
 				.replace(/ /g, "&nbsp;");
 		}
 		if (keys && keys.indexOf("compile") >= 0) {
@@ -35,7 +35,17 @@ Vue.directive("content", function(element, binding, vnode) {
 			});
 			content = new component();
 			content.$mount();
-			element.appendChild(content.$el);
+			var lastInserted = null;
+			// we added a wrapper div, strip it again
+			for (var i = content.$el.childNodes.length - 1; i >= 0; i--) {
+				if (!lastInserted) {
+					lastInserted = element.appendChild(content.$el.childNodes[i]);
+				}
+				else {
+					lastInserted = element.insertBefore(content.$el.childNodes[i], lastInserted);
+				}
+			}
+			//element.appendChild(content.$el);
 		}
 		else if (typeof(content) == "string") {
 			element.innerHTML = content;

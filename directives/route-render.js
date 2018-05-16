@@ -84,24 +84,26 @@ Vue.directive("route-render", {
 			if (!isSame) {
 				element["n-route-render-route"] = parameters;
 
-				// in a past version, we required a different alias as well before we rerendered
-				// perhaps we can do a strict mode?
-				var result = vnode.context.$services.router.route(parameters.alias, parameters.parameters, element, true);
-				if (result && result.then) {
-					result.then(function(component) {
-						element["n-route-component"] = component;
-						if (keys && keys.length) {
-							if (vnode.context[keys[0]] instanceof Function) {
-								vnode.context[keys[0]](component);
+				if (!binding.value.rerender || binding.value.rerender()) {
+					// in a past version, we required a different alias as well before we rerendered
+					// perhaps we can do a strict mode?
+					var result = vnode.context.$services.router.route(parameters.alias, parameters.parameters, element, true);
+					if (result && result.then) {
+						result.then(function(component) {
+							element["n-route-component"] = component;
+							if (keys && keys.length) {
+								if (vnode.context[keys[0]] instanceof Function) {
+									vnode.context[keys[0]](component);
+								}
+								else {
+									vnode.context.$refs[keys[0]] = component;
+								}
 							}
-							else {
-								vnode.context.$refs[keys[0]] = component;
+							if (binding.value.mounted) {
+								binding.value.mounted(component);
 							}
-						}
-						if (binding.value.mounted) {
-							binding.value.mounted(component);
-						}
-					});
+						});
+					}
 				}
 			}
 		}
