@@ -45,6 +45,9 @@
 			}, 
 			"route.js": {
 				"url": "directives/route.js"
+			}, 
+			"bubble.js": {
+				"url": "directives/bubble.js"
 			}
 		}, 
 		"vue": {

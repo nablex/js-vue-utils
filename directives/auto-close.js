@@ -29,7 +29,7 @@ Vue.directive("auto-close", {
 	},
 	unbind: function(element) {
 		if (element["$n-auto-close-listener"]) {
-			window.removeEventListener("click", element["$n-auto-close-listener"]);
+			window.removeEventListener("click", element["$n-auto-close-listener"], true);
 		}
 	}
 });

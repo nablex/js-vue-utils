@@ -21,8 +21,9 @@ Vue.directive("content", function(element, binding, vnode) {
 			// we interpret this as plain string data, that means making sure everything is escaped and whitespace is adhered to
 			if ((keys && keys.indexOf("plain") >= 0) || parameters.plain) {
 				content = content.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
-					.replace(/\n/g, "<br/>").replace(/\t/g, "&nbsp;&nbsp;&nbsp;&nbsp;")
-					.replace(/ /g, "&nbsp;");
+					.replace(/\n/g, "<br/>").replace(/\t/g, "&nbsp;&nbsp;&nbsp;&nbsp;");
+					// breaks default wrapping..
+					//.replace(/ /g, "&nbsp;");
 			}
 			if ((keys && keys.indexOf("compile") >= 0) || parameters.compile) {
 				var context = {};
