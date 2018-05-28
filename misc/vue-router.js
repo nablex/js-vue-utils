@@ -9,6 +9,7 @@ nabu.services.VueRouter = function(routerParameters) {
 	this.components = {};
 	this.router = new nabu.services.Router(routerParameters);
 
+	this.useProps = routerParameters.useProps;
 	this.route = function(alias, parameters, anchor, mask) {
 		return self.router.route(alias, parameters, anchor, mask);
 	}
@@ -48,10 +49,10 @@ nabu.services.VueRouter = function(routerParameters) {
 					else if (route.component) {
 						if (typeof(route.component) == "string") {
 							component = eval(route.component);
-							component = new component({ data: parameters });
+							component = new component(self.useProps ? {propsData: parameters} : { data: parameters });
 						}
 						else {
-							component = new route.component({ data: parameters });
+							component = new route.component(self.useProps ? {propsData: parameters} : { data: parameters });
 						}
 					}
 					route.$lastInstances[anchorName] = nabu.utils.vue.render({

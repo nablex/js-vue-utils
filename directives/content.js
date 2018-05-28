@@ -28,11 +28,15 @@ Vue.directive("content", function(element, binding, vnode) {
 			if ((keys && keys.indexOf("compile") >= 0) || parameters.compile) {
 				var context = {};
 				Object.keys(vnode.context.$props).map(function(key) {
-					context[key] = vnode.context.$props[key];
+					if (typeof(vnode.context.$props[key]) !== "undefined") {
+						context[key] = vnode.context.$props[key];
+					}
 				});
 				// data overwrites props if necessary
 				Object.keys(vnode.context.$data).map(function(key) {
-					context[key] = vnode.context.$data[key];
+					if (typeof(vnode.context.$data[key]) !== "undefined") {
+						context[key] = vnode.context.$data[key];
+					}
 				});
 				var component = Vue.extend({
 					data: function() {
@@ -42,7 +46,8 @@ Vue.directive("content", function(element, binding, vnode) {
 				});
 				content = new component();
 				content.$mount();
-				element.appendChild(content.$el);
+				// if there is only one child node, just append that to prevent too many additional wrappers
+				element.appendChild(content.$el.childNodes.length == 1 ? content.$el.childNodes[0] : content.$el);
 			}
 			else if (typeof(content) == "string") {
 				element.innerHTML = content;
