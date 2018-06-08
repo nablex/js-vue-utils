@@ -46,8 +46,16 @@ Vue.directive("content", function(element, binding, vnode) {
 				});
 				content = new component();
 				content.$mount();
-				// if there is only one child node, just append that to prevent too many additional wrappers
-				element.appendChild(content.$el.childNodes.length == 1 ? content.$el.childNodes[0] : content.$el);
+				
+				var insertBefore = null;
+				for (var i = content.$el.childNodes.length - 1; i >= 0; i--) {
+					if (insertBefore == null) {
+						insertBefore = element.appendChild(content.$el.childNodes[i]);
+					}
+					else {
+						insertBefore = element.insertBefore(content.$el.childNodes[i], insertBefore);
+					}
+				}
 			}
 			else if (typeof(content) == "string") {
 				element.innerHTML = content;
