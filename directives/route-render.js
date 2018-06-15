@@ -49,60 +49,65 @@ Vue.directive("route-render", {
 		destroy(element);
 	},
 	update: function(element, binding, vnode) {
-		var keys = binding.modifiers ? Object.keys(binding.modifiers) : null;
+		// the update can be called before the insert + nextTick has initially triggered
+		// we only want to re-render if we have rendered in the first place
+		// otherwise we can have multiple renders
+		if (element["n-route-render-route"]) {
+			var keys = binding.modifiers ? Object.keys(binding.modifiers) : null;
 		
-		var parameters = {
-			alias: binding.arg ? binding.arg : binding.value.alias,
-			parameters: binding.arg ? binding.value : binding.value.parameters
-		}
+			var parameters = {
+				alias: binding.arg ? binding.arg : binding.value.alias,
+				parameters: binding.arg ? binding.value : binding.value.parameters
+			}
 		
-		var isExactCopy = element["n-route-render-route-json"] == JSON.stringify(parameters);
+			var isExactCopy = element["n-route-render-route-json"] == JSON.stringify(parameters);
 		
-		if (!isExactCopy) {
-			element["n-route-render-route-json"] = JSON.stringify(parameters);
+			if (!isExactCopy) {
+				element["n-route-render-route-json"] = JSON.stringify(parameters);
 			
-			var isSameAlias = element["n-route-render-route"]
-				&& element["n-route-render-route"].alias == parameters.alias;
+				var isSameAlias = element["n-route-render-route"]
+					&& element["n-route-render-route"].alias == parameters.alias;
 			
-			var isSame = isSameAlias
-				&& element["n-route-render-route"].parameters == parameters.parameters;
-			// check by reference
-			if (!isSame && element["n-route-render-route"] && element["n-route-render-route"].parameters && parameters.parameters) {
-				var parameterKeys = Object.keys(parameters.parameters);
-				var availableParameterKeys = Object.keys(element["n-route-render-route"].parameters);
-				if (parameterKeys.length == availableParameterKeys.length) {
-					isSame = true;
-					for (var i = 0; i < parameterKeys.length; i++) {
-						if (element["n-route-render-route"].parameters[parameterKeys[i]] != parameters.parameters[parameterKeys[i]]) {
-							isSame = false;
-							break;
+				var isSame = isSameAlias
+					&& element["n-route-render-route"].parameters == parameters.parameters;
+				// check by reference
+				if (!isSame && element["n-route-render-route"] && element["n-route-render-route"].parameters && parameters.parameters) {
+					var parameterKeys = Object.keys(parameters.parameters);
+					var availableParameterKeys = Object.keys(element["n-route-render-route"].parameters);
+					if (parameterKeys.length == availableParameterKeys.length) {
+						isSame = true;
+						for (var i = 0; i < parameterKeys.length; i++) {
+							if (element["n-route-render-route"].parameters[parameterKeys[i]] != parameters.parameters[parameterKeys[i]]) {
+								isSame = false;
+								break;
+							}
 						}
 					}
 				}
-			}
 
-			if (!isSame) {
-				element["n-route-render-route"] = parameters;
+				if (!isSame) {
+					element["n-route-render-route"] = parameters;
 
-				if (!binding.value.rerender || binding.value.rerender()) {
-					// in a past version, we required a different alias as well before we rerendered
-					// perhaps we can do a strict mode?
-					var result = vnode.context.$services.router.route(parameters.alias, parameters.parameters, element, true);
-					if (result && result.then) {
-						result.then(function(component) {
-							element["n-route-component"] = component;
-							if (keys && keys.length) {
-								if (vnode.context[keys[0]] instanceof Function) {
-									vnode.context[keys[0]](component);
+					if (!binding.value.rerender || binding.value.rerender()) {
+						// in a past version, we required a different alias as well before we rerendered
+						// perhaps we can do a strict mode?
+						var result = vnode.context.$services.router.route(parameters.alias, parameters.parameters, element, true);
+						if (result && result.then) {
+							result.then(function(component) {
+								element["n-route-component"] = component;
+								if (keys && keys.length) {
+									if (vnode.context[keys[0]] instanceof Function) {
+										vnode.context[keys[0]](component);
+									}
+									else {
+										vnode.context.$refs[keys[0]] = component;
+									}
 								}
-								else {
-									vnode.context.$refs[keys[0]] = component;
+								if (binding.value.mounted) {
+									binding.value.mounted(component);
 								}
-							}
-							if (binding.value.mounted) {
-								binding.value.mounted(component);
-							}
-						});
+							});
+						}
 					}
 				}
 			}
