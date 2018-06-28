@@ -76,7 +76,7 @@ nabu.services.VueService = function(component, parameters) {
 						var done = function() {
 							promise.resolve();
 						};
-						clear.call(instance);
+						clear.call(instance, done);
 						return promise;
 					};
 					for (var i = 0; i < clears.length; i++) {
