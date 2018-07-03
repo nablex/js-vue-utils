@@ -65,6 +65,7 @@ nabu.utils.vue.render = function(parameters) {
 					}
 					if (possible && possible.__vue__) {
 						component.$parent = possible.__vue__;
+						component.$root = component.$parent.$root ? component.$parent.$root : component.$parent;
 					}
 				}
 			}
