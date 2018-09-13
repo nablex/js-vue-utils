@@ -39,9 +39,6 @@ nabu.services.VueRouter = function(routerParameters) {
 			var originalEnter = route.enter;
 			route.enter = function(anchorName, parameters, previousRoute, previousParameters, currentRoute) {
 				var render = function() {
-					if (!route.$lastInstances) {
-						route.$lastInstances = {};
-					}
 					var component = null;
 					if (originalEnter) {
 						component = originalEnter(parameters, previousRoute, previousParameters, currentRoute);
@@ -55,7 +52,7 @@ nabu.services.VueRouter = function(routerParameters) {
 							component = new route.component(self.useProps ? {propsData: parameters} : { data: parameters });
 						}
 					}
-					route.$lastInstances[anchorName] = nabu.utils.vue.render({
+					return nabu.utils.vue.render({
 						target: anchorName,
 						content: component,
 						ready: function() {
@@ -68,7 +65,6 @@ nabu.services.VueRouter = function(routerParameters) {
 							element.setAttribute("route", route.alias);
 						}
 					});
-					return route.$lastInstances[anchorName];
 				};
 				var promises = [];
 				// initialize any lazy services

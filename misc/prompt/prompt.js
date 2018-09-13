@@ -8,9 +8,16 @@ nabu.utils.vue.prompt = function(render, parameters) {
 	root.setAttribute("class", "n-prompt");
 	document.body.appendChild(root);
 	
-	var container = document.createElement("div");
-	container.setAttribute("class", "n-prompt-container");
-	root.appendChild(container);
+	var container;
+	
+	if (parameters && parameters.raw) {
+		container = root;
+	}
+	else {
+		var container = document.createElement("div");
+		container.setAttribute("class", "n-prompt-container");
+		root.appendChild(container);
+	}
 	
 	escapeListener = function(event) {
 		if (event.keyCode == 27) {
@@ -39,13 +46,19 @@ nabu.utils.vue.prompt = function(render, parameters) {
 		component.$resolve = function(object) {
 			document.body.removeChild(root);
 			document.removeEventListener("keydown", escapeListener);
-			promise.resolve(object);
+			if (!promise.state) {
+				promise.resolve(object);
+			}
 		};
 		component.$reject = function(object) {
 			document.body.removeChild(root);
 			document.removeEventListener("keydown", escapeListener);
-			promise.reject(object);
+			if (!promise.state) {
+				promise.reject(object);
+			}
 		}
+		// if someone on the outside resolves the promise, make sure we call the functions
+		promise.then(component.$resolve, component.$reject);
 	}});
 	return promise;
 };
