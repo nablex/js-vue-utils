@@ -42,23 +42,28 @@ nabu.utils.vue.prompt = function(render, parameters) {
 		this.$render({ target: container, content: new nabu.views.cms.core.Loader() });
 	}
 	
-	this.$render({ target: container, content: render, activate: function(component) {
-		component.$resolve = function(object) {
+	var removeRoot = function() {
+		if (root.parentNode == document.body) {
 			document.body.removeChild(root);
 			document.removeEventListener("keydown", escapeListener);
+		}
+	}
+	
+	this.$render({ target: container, content: render, activate: function(component) {
+		component.$resolve = function(object) {
+			removeRoot();
 			if (!promise.state) {
 				promise.resolve(object);
 			}
 		};
 		component.$reject = function(object) {
-			document.body.removeChild(root);
-			document.removeEventListener("keydown", escapeListener);
+			removeRoot();
 			if (!promise.state) {
 				promise.reject(object);
 			}
 		}
 		// if someone on the outside resolves the promise, make sure we call the functions
-		promise.then(component.$resolve, component.$reject);
+		promise.then(removeRoot, removeRoot);
 	}});
 	return promise;
 };
