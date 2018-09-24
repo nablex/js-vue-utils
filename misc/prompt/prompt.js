@@ -2,6 +2,10 @@ if (!nabu) { var nabu = {}; }
 if (!nabu.utils) { nabu.utils = {}; }
 if (!nabu.utils.vue) { nabu.utils.vue = {}; }
 
+nabu.utils.vue.Loader = Vue.component("n-loader", {
+	template: "<span class='n-icon n-icon-spinner n-loader fa spinner' style='display: block; text-align: center; margin: auto;'></span>"
+})
+
 nabu.utils.vue.prompt = function(render, parameters) {
 	
 	var root = document.createElement("div");
@@ -39,7 +43,7 @@ nabu.utils.vue.prompt = function(render, parameters) {
 	var promise = new nabu.utils.promise();
 	
 	if (parameters && parameters.slow) {
-		this.$render({ target: container, content: new nabu.views.cms.core.Loader() });
+		this.$render({ target: container, content: new nabu.utils.vue.Loader() });
 	}
 	
 	var removeRoot = function() {
@@ -116,14 +120,24 @@ nabu.utils.vue.wait = function(parameters) {
 			activate: function(done) {
 				var self = this;
 				parameters.promise.then(function(result) {
-					nabu.utils.objects.merge(self, parameters.success);
+					if (parameters.success != null) {
+						nabu.utils.objects.merge(self, parameters.success);
+					}
 					self.result = result;
 					done();
+					if (parameters.success == null) {
+						self.resolve();
+					}
 				}, function(result) {
-					nabu.utils.objects.merge(self, parameters.failure);
+					if (parameters.failure != null) {
+						nabu.utils.objects.merge(self, parameters.failure);
+					}
 					self.failed = true;
 					self.result = result;
 					done();
+					if (parameters.failure == null) {
+						self.resolve();
+					}
 				});
 			},
 			methods: {
