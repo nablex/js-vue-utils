@@ -52,11 +52,11 @@ nabu.services.VueRouter = function(routerParameters) {
 	this.create = function(route) {
 		if (route.enter) {
 			var originalEnter = route.enter;
-			route.enter = function(anchor, parameters, currentRoute) {
+			route.enter = function(anchor, parameters, mask) {
 				var render = function() {
 					var component = null;
 					if (originalEnter) {
-						component = originalEnter(parameters, currentRoute);
+						component = originalEnter(parameters, mask);
 					}
 					else if (route.component) {
 						if (typeof(route.component) == "string") {
