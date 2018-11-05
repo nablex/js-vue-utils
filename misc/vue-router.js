@@ -140,7 +140,10 @@ nabu.services.VueRouter = function(routerParameters) {
 		var originalLeave = route.leave;
 		route.leave = function(element) {
 			if (element) {
-				element.removeAttribute("route");
+				// removing this while routing to the same thing (with an activate so a delayed render)
+				// means that the attribute is immediately removed (disabling styling based on it) and only reintroduced with a delay
+				// this causes visual flickering
+				//element.removeAttribute("route");
 				delete element.leave;
 			}
 			if (originalLeave) {
