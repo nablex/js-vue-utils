@@ -29,7 +29,7 @@ nabu.services.VueRouter = function(routerParameters) {
 		return self.router.route(alias, parameters, anchor, mask);
 	}
 	this.routeInitial = function(anchor) {
-		this.router.routeInitial(anchor);
+		return this.router.routeInitial(anchor);
 	};
 	this.updateUrl = this.router.updateUrl;
 	this.routeAll = this.router.routeAll;

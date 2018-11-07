@@ -14,6 +14,7 @@ V 5343: added function decodeCustom to decode our encoded single quotes (through
 - reverted regex forAliasRE to previous, the current syntax is not supported by server side rendering and the new regex seems to add little
 - 8603: changed to $^{} to prevent erroneous variable replacement
 - changed all checks for "development" !== "production" to take into account the nabu run mode
+- 7388: added explicit setting of style attribute in function 'updateStyle' in case of server side rendering, otherwise custom style attributes don't make it into the html
 **/
 
 /*!
@@ -7383,6 +7384,20 @@ function updateStyle (oldVnode, vnode) {
       // ie9 setting to null has no effect, must use empty string
       setProp(el, name, cur == null ? '' : cur);
     }
+  }
+  
+  // vue only sets the style through element.style[attr] = value
+  // it does not actually set the property
+  // for server-side rendering however, this is bad as it does not end up in the html
+  if (navigator.userAgent.match(/Nabu-Renderer/)) {
+  	var result = "";
+  	for (name in newStyle) {
+  		if (result != "") {
+  			result += ";"
+  		}
+  		result += name + ":" + newStyle[name];
+  	}
+  	el.setAttribute("style", result);
   }
 }
 
