@@ -114,3 +114,56 @@ Vue.mixin({
 		$self: function() { return this }
 	}
 });
+
+Vue.views = {};
+Vue.view = function(name, component) {
+	if (component) {
+		// assume template id matches
+		if (component.template == null) {
+			component.template = "#" + name;
+		}
+		Vue.views[name] = {
+			original: component,
+			component: Vue.extend(component)
+		};
+		
+	}
+	return Vue.views[name].component;
+};
+
+window.addEventListener("load", function () {
+	application.bootstrap(function($services) {
+		Object.keys(Vue.views).map(function(name) {
+			var component = Vue.views[name].original;
+			var route = { 
+				alias: name,
+				enter: function(properties) {
+					var component = Vue.view(name);
+					return new component({propsData: properties});
+				},
+				query: []
+			};
+			if (component.url) {
+				route.url = component.url;
+			}
+			if (component.props) {
+				Object.keys(component.props).map(function(key) {
+					if (component.props[key].query == true) {
+						route.query.push(key);
+					}
+				});
+			}
+			$services.router.register(route);
+		});
+	});
+});
+
+Vue.component("n-view", {
+	template: "<div v-route-render='{alias: alias, parameters: $attrs }'></div>",
+	props: {
+		alias: {
+			type: String,
+			required: true
+		}
+	}
+})
