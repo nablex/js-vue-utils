@@ -116,6 +116,7 @@ Vue.mixin({
 });
 
 Vue.views = {};
+Vue.services = {};
 Vue.view = function(name, component) {
 	if (component) {
 		// assume template id matches
@@ -129,6 +130,12 @@ Vue.view = function(name, component) {
 		
 	}
 	return Vue.views[name].component;
+};
+Vue.service = function(name, component, parameters) {
+	if (component) {
+		Vue.services[name] = nabu.services.VueService(Vue.extend(component, parameters));
+	}
+	return Vue.services[name];
 };
 
 window.addEventListener("load", function () {
@@ -148,13 +155,15 @@ window.addEventListener("load", function () {
 			}
 			if (component.props) {
 				Object.keys(component.props).map(function(key) {
-					if (component.props[key].query == true) {
+					// if it does not exist in the url, assume query parameter
+					if (!route.url || route.url.indexOf("{" + key + "}") < 0) {
 						route.query.push(key);
 					}
 				});
 			}
 			$services.router.register(route);
 		});
+		return $services.$register(Vue.services);
 	});
 });
 
