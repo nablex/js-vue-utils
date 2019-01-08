@@ -33,9 +33,9 @@ nabu.utils.vue.prompt = function(render, parameters) {
 	document.addEventListener("keydown", escapeListener);
 
 	root.addEventListener("click", function(event) {
-		if (event.target == container) {
+		if (event.target == root) {
 			document.body.removeChild(root);
-			document.removeEventListener("keydown", escapeListener);
+			document.removeEventListener("click", escapeListener);
 			promise.reject();
 		}
 	});
