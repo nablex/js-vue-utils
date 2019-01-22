@@ -168,11 +168,21 @@ window.addEventListener("load", function () {
 });
 
 Vue.component("n-view", {
-	template: "<div v-route-render='{alias: alias, parameters: $attrs }'></div>",
+	template: "<div v-route-render='{alias: alias, parameters: $attrs, mounted: register }'></div>",
 	props: {
 		alias: {
 			type: String,
 			required: true
 		}
+	},
+	methods: {
+		register: function(component) {
+			if (this.$listeners) {
+				var self = this;
+				Object.keys(this.$listeners).forEach(function(event) {
+					component.$on(event, self.$listeners[event]);
+				})
+			}
+		}
 	}
-})
+});
