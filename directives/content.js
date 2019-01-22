@@ -25,7 +25,10 @@ Vue.directive("content", function(element, binding, vnode) {
 					// breaks default wrapping..
 					//.replace(/ /g, "&nbsp;");
 			}
-			if ((keys && keys.indexOf("compile") >= 0) || parameters.compile) {
+			if (typeof(content) == "string" && content.match(/^[ \t]+$/)) {
+				element.innerHTML = content;
+			}
+			else if ((keys && keys.indexOf("compile") >= 0) || parameters.compile) {
 				var context = {};
 				Object.keys(vnode.context.$props).map(function(key) {
 					if (typeof(vnode.context.$props[key]) !== "undefined") {
