@@ -6,7 +6,7 @@
 		<div class="n-confirm-content"><slot>{{ message }}</slot></div>
 		<div class="n-confirm-buttons">
 			<a v-if="rejectable" class="cancel" href="javascript:void(0)" @click="$reject()">{{ cancel ? cancel : '%{Cancel}' }}</a>
-			<button class="primary" @click="resolve()">{{ ok ? ok : '%{Ok}' }}</button>
+			<button class="primary" @click="resolve()" v-focus>{{ ok ? ok : '%{Ok}' }}</button>
 		</div>
 	</div>
 </template>
