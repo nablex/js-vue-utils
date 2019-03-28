@@ -14,6 +14,7 @@ Vue.directive("fixed-header", {
 		var height = element.getBoundingClientRect().height;
 		var toggled = false;
 		var div = document.createElement("div");
+		div.setAttribute("class", "fixed-header-spacer");
 		var inserted = false;
 		element["$n-fixed-header-listener"] = function(event) {
 			if (!inserted && element.parentNode) {

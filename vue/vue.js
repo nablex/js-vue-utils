@@ -15,6 +15,8 @@ V 5343: added function decodeCustom to decode our encoded single quotes (through
 - 8603: changed to $^{} to prevent erroneous variable replacement
 - changed all checks for "development" !== "production" to take into account the nabu run mode
 - 7388: added explicit setting of style attribute in function 'updateStyle' in case of server side rendering, otherwise custom style attributes don't make it into the html
+- 1824: don't use the Promise, it does not throw an exception but it also does not seem to wait until everything is rendered, so it appears not to block the javascript thread
+	- the end result is that in some cases the last Vue.nextTick() (which uses the microtimer function) will never finish as the code stops before that time
 **/
 
 /*!
@@ -1821,7 +1823,7 @@ if (typeof setImmediate !== 'undefined' && isNative(setImmediate)) {
 
 // Determine microtask defer implementation.
 /* istanbul ignore next, $flow-disable-line */
-if (typeof Promise !== 'undefined' && isNative(Promise)) {
+if (typeof Promise !== 'undefined' && isNative(Promise) && !navigator.userAgent.match(/Nabu-Renderer/)) {
   var p = Promise.resolve();
   microTimerFunc = function () {
     p.then(flushCallbacks);
