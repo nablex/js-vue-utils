@@ -28,7 +28,12 @@ Vue.directive("route-render", {
 					}
 				});
 			}
-			element["n-route-render-route-json"] = JSON.stringify(parameters);
+			try {
+				element["n-route-render-route-json"] = JSON.stringify(parameters);
+			}
+			catch (exception) {
+				console.warn("Could not marshal route render parameters", exception);				
+			}
 			element["n-route-render-route"] = parameters;
 		});
 	},
@@ -60,10 +65,21 @@ Vue.directive("route-render", {
 				parameters: binding.arg ? binding.value : binding.value.parameters
 			}
 		
-			var isExactCopy = element["n-route-render-route-json"] == JSON.stringify(parameters);
+			var stringifiedParameters = null;
+			// note that this was added because of page-arbitrary which contains non-serializable parameters
+			// should page-arbitrary not update properly, we can have another look at this
+			try {
+				stringifiedParameters = JSON.stringify(parameters);
+			}
+			catch (exception) {
+				console.warn("Could not marshal route render parameters", exception);
+			}
+			// if we can't stringify the parameters, assume it is not updated
+			// otherwise we end up in an infinite update loop
+			var isExactCopy = stringifiedParameters == null || element["n-route-render-route-json"] == stringifiedParameters;
 		
 			if (!isExactCopy) {
-				element["n-route-render-route-json"] = JSON.stringify(parameters);
+				element["n-route-render-route-json"] = stringifiedParameters;
 			
 				var isSameAlias = element["n-route-render-route"]
 					&& element["n-route-render-route"].alias == parameters.alias;
