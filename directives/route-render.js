@@ -26,6 +26,13 @@ Vue.directive("route-render", {
 					if (binding.value && binding.value.mounted) {
 						binding.value.mounted(component);
 					}
+					if (vnode.context.$children) {
+						vnode.context.$children.push(component);
+						component.$parent = vnode.context;
+					}
+					if (vnode.context.$root) {
+						component.$root = vnode.context.$root;
+					}
 				});
 			}
 			try {
@@ -110,6 +117,19 @@ Vue.directive("route-render", {
 						var result = vnode.context.$services.router.route(parameters.alias, parameters.parameters, element, true);
 						if (result && result.then) {
 							result.then(function(component) {
+								if (vnode.context.$children) {
+									if (element["n-route-component"]) {
+										var index = vnode.context.$children.indexOf(element["n-route-component"]);
+										if (index >= 0) {
+											vnode.context.$children.splice(index, 1);
+										}
+									}
+									vnode.context.$children.push(component);
+									component.$parent = vnode.context;
+								}
+								if (vnode.context.$root) {
+									component.$root = vnode.context.$root;
+								}
 								element["n-route-component"] = component;
 								if (keys && keys.length) {
 									if (vnode.context[keys[0]] instanceof Function) {
