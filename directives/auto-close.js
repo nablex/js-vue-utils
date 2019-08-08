@@ -6,6 +6,7 @@ Vue.directive("auto-close", {
 		element["$n-auto-close-listener"] = function(event) {
 			// it still has to be in the document to be valid
 			var close = event.target != element && !element.contains(event.target) && document.body.contains(event.target);
+			var inside = false;
 			if (!close && element.contains(event.target)) {
 				var find = event.target;
 				var attribute = "auto-close";
@@ -16,13 +17,14 @@ Vue.directive("auto-close", {
 				while (find != element) {
 					if (find.hasAttribute(attribute) && find.getAttribute(attribute) != "false") {
 						close = true;
+						inside = true;
 						break;
 					}
 					find = find.parentNode;
 				}
 			}
 			if (close && binding.value) {
-				binding.value();
+				binding.value(inside);
 			}
 		};
 		window.addEventListener("click", element["$n-auto-close-listener"], true);
@@ -33,3 +35,4 @@ Vue.directive("auto-close", {
 		}
 	}
 });
+
