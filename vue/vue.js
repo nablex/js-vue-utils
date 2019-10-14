@@ -9,10 +9,10 @@
  * +- 1955: disable use of Proxy in server side rendering, it does not throw an exception but also does not seem to block the javascript thread until everything is rendered
  * 			the end result is that in some cases the last Vue.nextTick() (which uses the microtimer function) will never finish as the code stops before that time
  * +- 7909: added explicit setting of style attribute in server side rendering, otherwise style attributes don't make it into the html
+ * +- 11940: allow vm on document.body
  * - changed all checks for "development" !== 'production' to take into account nabu development mode (a _lot_ fewer this time around)
  * 
  * Not applied:
- * allow vm on document.body: seems to be enabled by default again in this version?
  * expose observe method in public API: presumably doable with newly exposed API (2.6.0+): Vue.observable()
  * regex forAliasRE seems to be compatible again with the server side rendering in this version
  */
@@ -11936,13 +11936,17 @@
   ) {
     el = el && query(el);
 
+	// NABU-CUSTOMIZED
     /* istanbul ignore if */
+    /*
     if (el === document.body || el === document.documentElement) {
       warn(
         "Do not mount Vue to <html> or <body> - mount to normal elements instead."
       );
       return this
     }
+    */
+    // NABU-END
 
     var options = this.$options;
     // resolve template/el and convert to render function
@@ -12018,3 +12022,4 @@
   return Vue;
 
 }));
+
