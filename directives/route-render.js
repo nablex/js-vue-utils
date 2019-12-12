@@ -64,6 +64,17 @@ Vue.directive("route-render", {
 		// the update can be called before the insert + nextTick has initially triggered
 		// we only want to re-render if we have rendered in the first place
 		// otherwise we can have multiple renders
+		// this stripping is currently focused on page-builder, in the future we should extract this to a configurable set of parameters
+		var cloneParameters = function(parameters) {
+			var result = {};
+			Object.keys(parameters).forEach(function(x) {
+				// page and cell are just big...
+				if (x != "page" && x != "cell") {	//  && x != "parameters"
+					result[x] = parameters[x];
+				}
+			});
+			return result;
+		}
 		if (element["n-route-render-route"]) {
 			var keys = binding.modifiers ? Object.keys(binding.modifiers) : null;
 		
@@ -71,12 +82,17 @@ Vue.directive("route-render", {
 				alias: binding.arg ? binding.arg : binding.value.alias,
 				parameters: binding.arg ? binding.value : binding.value.parameters
 			}
+			
+			var lightParameters = {
+				alias: binding.arg ? binding.arg : binding.value.alias,
+				parameters: cloneParameters(binding.arg ? binding.value : binding.value.parameters)
+			}
 		
 			var stringifiedParameters = null;
 			// note that this was added because of page-arbitrary which contains non-serializable parameters
 			// should page-arbitrary not update properly, we can have another look at this
 			try {
-				stringifiedParameters = JSON.stringify(parameters);
+				stringifiedParameters = JSON.stringify(lightParameters);
 			}
 			catch (exception) {
 				console.warn("Could not marshal route render parameters", exception);
