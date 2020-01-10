@@ -11,6 +11,7 @@
  * +- 7909: added explicit setting of style attribute in server side rendering, otherwise style attributes don't make it into the html
  * +- 11940: allow vm on document.body
  * - changed all checks for "development" !== 'production' to take into account nabu development mode (a _lot_ fewer this time around)
+ * - commented out warning triggered a lot by page builder: 4758
  * 
  * Not applied:
  * expose observe method in public API: presumably doable with newly exposed API (2.6.0+): Vue.observable()
@@ -4755,11 +4756,11 @@
         }
       }
       if (props && hasOwn(props, key)) {
-        warn(
+        /*warn(
           "The data property \"" + key + "\" is already declared as a prop. " +
           "Use prop default value instead.",
           vm
-        );
+        );*/
       } else if (!isReserved(key)) {
         proxy(vm, "_data", key);
       }
