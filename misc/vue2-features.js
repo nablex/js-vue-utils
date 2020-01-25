@@ -144,6 +144,10 @@ window.addEventListener("load", function () {
 			var component = Vue.views[name].original;
 			var route = { 
 				alias: name,
+				category: component.category,
+				description: component.description,
+				name: component.name,
+				icon: component.icon,
 				enter: function(properties) {
 					var component = Vue.view(name);
 					return new component({propsData: properties});
