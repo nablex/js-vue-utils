@@ -35,8 +35,22 @@ Vue.directive("route-render", {
 					}
 				});
 			}
+			var cloneParameters = function(parameters) {
+				var result = {};
+				Object.keys(parameters).forEach(function(x) {
+					// page and cell are just big...
+					if (x != "page" && x != "cell") {	//  && x != "parameters"
+						result[x] = parameters[x];
+					}
+				});
+				return result;
+			}
+			var lightParameters = {
+				alias: binding.arg ? binding.arg : binding.value.alias,
+				parameters: cloneParameters(binding.arg ? binding.value : binding.value.parameters)
+			}
 			try {
-				element["n-route-render-route-json"] = JSON.stringify(parameters);
+				element["n-route-render-route-json"] = JSON.stringify(lightParameters);
 			}
 			catch (exception) {
 				console.warn("Could not marshal route render parameters", exception);				
@@ -126,7 +140,6 @@ Vue.directive("route-render", {
 
 				if (!isSame) {
 					element["n-route-render-route"] = parameters;
-
 					if (!binding.value.rerender || binding.value.rerender()) {
 						// in a past version, we required a different alias as well before we rerendered
 						// perhaps we can do a strict mode?
@@ -166,3 +179,4 @@ Vue.directive("route-render", {
 		}
 	}
 });
+
