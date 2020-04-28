@@ -71,8 +71,13 @@ nabu.services.VueRouter = function(routerParameters) {
 						target: anchor,
 						content: component,
 						ready: function() {
+							// this hook is meant for system actions, not someone defining the route
+							if (route.postProcess) {
+								route.postProcess(parameters, component);
+							}
+							// this hook is meant for people defining the route who want to do special stuff
 							if (route.ready) {
-								route.ready(parameters);
+								route.ready(parameters, component);
 							}
 						},
 						prepare: function(element) {

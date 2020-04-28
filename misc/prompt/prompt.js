@@ -53,7 +53,7 @@ nabu.utils.vue.prompt = function(render, parameters) {
 		}
 	}
 	
-	this.$render({ target: container, content: render, activate: function(component) {
+	var activate = function(component) {
 		component.$resolve = function(object) {
 			removeRoot();
 			if (!promise.state) {
@@ -68,7 +68,13 @@ nabu.utils.vue.prompt = function(render, parameters) {
 		}
 		// if someone on the outside resolves the promise, make sure we call the functions
 		promise.then(removeRoot, removeRoot);
-	}});
+	};
+	if (typeof(render) == "string" && render.indexOf("#") < 0 && this.$services.router) {
+		this.$services.router.route(render, parameters, container).then(activate);
+	}
+	else {
+		this.$render({ target: container, content: render, activate: activate});
+	}
 	return promise;
 };
 
