@@ -42,7 +42,7 @@ nabu.utils.vue.prompt = function(render, parameters) {
 	
 	var promise = new nabu.utils.promise();
 	
-	if (parameters && parameters.slow) {
+	if (parameters && parameters.slow && this.$render) {
 		this.$render({ target: container, content: new nabu.utils.vue.Loader() });
 	}
 	
@@ -69,11 +69,14 @@ nabu.utils.vue.prompt = function(render, parameters) {
 		// if someone on the outside resolves the promise, make sure we call the functions
 		promise.then(removeRoot, removeRoot);
 	};
-	if (typeof(render) == "string" && render.indexOf("#") < 0 && this.$services.router) {
+	if (typeof(render) == "string" && render.indexOf("#") < 0 && this.$services && this.$services.router) {
 		this.$services.router.route(render, parameters, container).then(activate);
 	}
-	else {
+	else if (this.$render) {
 		this.$render({ target: container, content: render, activate: activate});
+	}
+	else {
+		nabu.utils.vue.render({ target: container, content: render, activate: activate});
 	}
 	return promise;
 };

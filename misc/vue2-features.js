@@ -45,6 +45,12 @@ Vue.mixin({
 			Vue.util.initWatch(this, this.$options.asyncWatch);
 		}
 	},
+	/*
+	uncomment for debugging
+	updated: function() {
+		console.log("updated", this.$options.template);	
+	},
+	*/
 	methods: {
 		// re-add the $appendTo, the router depends on it
 		$appendTo: function(element) {
