@@ -83,7 +83,7 @@ Vue.directive("route-render", {
 			var result = {};
 			Object.keys(parameters).forEach(function(x) {
 				// page and cell are just big...
-				if (x != "page" && x != "cell") {	//  && x != "parameters"
+				if (x != "page" && x != "cell" && x != "component") {	//  && x != "parameters"
 					result[x] = parameters[x];
 				}
 			});
