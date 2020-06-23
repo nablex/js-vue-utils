@@ -67,8 +67,12 @@ nabu.services.VueRouter = function(routerParameters) {
 							component = new route.component(self.useProps ? {propsData: parameters} : { data: parameters });
 						}
 					}
+					var element = typeof(anchor) === "object" ? anchor : document.getElementById(anchor);
+					if (!element && anchor == "body") {
+						element = document.body;
+					}
 					return nabu.utils.vue.render({
-						target: anchor,
+						target: element,
 						content: component,
 						ready: function() {
 							// this hook is meant for system actions, not someone defining the route
