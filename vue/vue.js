@@ -16,9 +16,10 @@
  * Not applied:
  * expose observe method in public API: presumably doable with newly exposed API (2.6.0+): Vue.observable()
  * regex forAliasRE seems to be compatible again with the server side rendering in this version
+ * changed main comment to remove the ! after /*. this was preventing closure compilation
  */
 
-/*!
+/*
  * Vue.js v2.6.10
  * (c) 2014-2019 Evan You
  * Released under the MIT License.
