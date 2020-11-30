@@ -154,6 +154,9 @@ window.addEventListener("load", function () {
 				description: component.description,
 				name: component.name,
 				icon: component.icon,
+				accept: component.accept,
+				// we call it "init" because "initialize" is already taken in vue...
+				initialize: component.init,
 				enter: function(properties) {
 					var component = Vue.view(name);
 					return new component({propsData: properties});

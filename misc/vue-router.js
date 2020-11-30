@@ -52,7 +52,9 @@ nabu.services.VueRouter = function(routerParameters) {
 	this.create = function(route) {
 		if (route.enter) {
 			var originalEnter = route.enter;
-			route.enter = function(anchor, parameters, mask) {
+			route.enter = function(anchor, parameters, mask, parentEnter) {
+				var promise = new nabu.utils.promise();
+				
 				var render = function() {
 					var component = null;
 					if (originalEnter) {
@@ -74,7 +76,7 @@ nabu.services.VueRouter = function(routerParameters) {
 					return nabu.utils.vue.render({
 						target: element,
 						content: component,
-						ready: function() {
+						ready: function(component) {
 							// this hook is meant for system actions, not someone defining the route
 							if (route.postProcess) {
 								route.postProcess(parameters, component);
@@ -83,6 +85,7 @@ nabu.services.VueRouter = function(routerParameters) {
 							if (route.ready) {
 								route.ready(parameters, component);
 							}
+							promise.resolve(component);
 						},
 						prepare: function(element) {
 							// enrich the anchor with contextually relevant information
@@ -92,6 +95,11 @@ nabu.services.VueRouter = function(routerParameters) {
 					});
 				};
 				var promises = [];
+	
+				// if the parent returns a promise, wait on that as well
+				if (parentEnter && parentEnter.then) {
+					promises.push(parentEnter);
+				}
 				
 				// make sure we register any leaves that can object to leaving the current route
 				var element = typeof(anchor) === "object" ? anchor : document.getElementById(anchor);
@@ -139,9 +147,8 @@ nabu.services.VueRouter = function(routerParameters) {
 					}
 				}
 
-				var promise = new nabu.utils.promise();
 				new nabu.utils.promises(promises).then(function() {
-					promise.resolve(render());
+					render();
 				}, promise);
 				return promise;
 			};
@@ -162,3 +169,4 @@ nabu.services.VueRouter = function(routerParameters) {
 		return route;
 	};
 }
+

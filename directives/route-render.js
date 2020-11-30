@@ -83,6 +83,7 @@ Vue.directive("route-render", {
 			var result = {};
 			Object.keys(parameters).forEach(function(x) {
 				// page and cell are just big...
+				// component is for page-arbitrary, we send in the component itself... which is not serializable
 				if (x != "page" && x != "cell" && x != "component") {	//  && x != "parameters"
 					result[x] = parameters[x];
 				}
