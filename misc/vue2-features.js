@@ -199,3 +199,23 @@ Vue.component("n-view", {
 		}
 	}
 });
+
+// https://jsfiddle.net/Linusborg/mfqjk5hm/
+// https://github.com/vuejs/vue/issues/7431
+// try to avoid wrapper elements when inserting html
+// not entirely sure if this is still responsive?
+Vue.component('html-fragment', {
+	functional: true,
+	props: {
+		html: {
+			type: String, 
+			required: true
+		}
+	},
+	render(h, ctx) {
+		return new Vue({
+			beforeCreate() { this.$createElement = h }, // not necessary, but cleaner imho
+			template: `<div>${ctx.props.html}</div>`
+		}).$mount()._vnode.children;
+	}
+});
