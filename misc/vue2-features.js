@@ -212,7 +212,7 @@ Vue.component('html-fragment', {
 			required: true
 		}
 	},
-	render(h, ctx) {
+	render: function(h, ctx) {
 		return new Vue({
 			beforeCreate: function() { this.$createElement = h }, // not necessary, but cleaner imho
 			template: "<div>${ctx.props.html}</div>"
