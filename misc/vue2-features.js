@@ -215,7 +215,7 @@ Vue.component('html-fragment', {
 	render(h, ctx) {
 		return new Vue({
 			beforeCreate() { this.$createElement = h }, // not necessary, but cleaner imho
-			template: `<div>${ctx.props.html}</div>`
+			template: "<div>${ctx.props.html}</div>"
 		}).$mount()._vnode.children;
 	}
 });
