@@ -93,12 +93,12 @@ Vue.directive("content", function(element, binding, vnode) {
 				}
 				rewriteLinks();
 			}
-			else if (typeof(content) == "string") {
-				element.innerHTML = content;
+			else if (content instanceof HTMLElement) {
+				element.appendChild(content);
 				rewriteLinks();
 			}
 			else {
-				element.appendChild(content);
+				element.innerHTML = content;
 				rewriteLinks();
 			}
 		}
