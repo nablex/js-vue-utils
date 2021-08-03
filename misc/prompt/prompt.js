@@ -3,13 +3,13 @@ if (!nabu.utils) { nabu.utils = {}; }
 if (!nabu.utils.vue) { nabu.utils.vue = {}; }
 
 nabu.utils.vue.Loader = Vue.component("n-loader", {
-	template: "<span class='n-icon n-icon-spinner n-loader fa spinner' style='display: block; text-align: center; margin: auto;'></span>"
+	template: "<span class='n-icon n-icon-spinner n-loader fa spinner fas fa-spinner' style='display: block; text-align: center; margin: auto;'></span>"
 })
 
 nabu.utils.vue.prompt = function(render, parameters) {
 	
 	var root = document.createElement("div");
-	root.setAttribute("class", "n-prompt");
+	root.setAttribute("class", "n-prompt" + (parameters.class ? " " + parameters.class : ""));
 	document.body.appendChild(root);
 	
 	var container;
@@ -161,7 +161,7 @@ nabu.utils.vue.wait = function(parameters) {
 			}
 		});
 		return new component({ data: parameters});
-	}, { slow: true });
+	}, { slow: true, class: "n-prompt-wait" });
 };
 
 Vue.mixin({

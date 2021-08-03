@@ -11,6 +11,7 @@
  * +- 7909: added explicit setting of style attribute in server side rendering, otherwise style attributes don't make it into the html
  * +- 11940: allow vm on document.body
  * - changed all checks for "development" !== 'production' to take into account nabu development mode (a _lot_ fewer this time around)
+ *    - 414: changed silent from hardcoded "false" to take into account production modus (might explain why we had a lot fewer checks...)
  * - commented out warning triggered a lot by page builder: 4758
  * 
  * Not applied:
@@ -411,7 +412,7 @@
     /**
      * Whether to suppress warnings.
      */
-    silent: false,
+    silent: "${when(environment('development') == true, false, true)}",
 
     /**
      * Show production mode tip message on boot?
