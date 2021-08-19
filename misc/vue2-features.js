@@ -93,6 +93,7 @@ Vue.mixin({
 	},
 	// re-add the ready lifecycle state
 	mounted: function() {
+		this.$mounted = true;
 		if (this.$options.ready) {
 			var self = this;
 			this.$nextTick(function () {
@@ -110,6 +111,7 @@ Vue.mixin({
 	// $children and $refs are no longer reactive
 	// need a way in the parent to know when a child has been added (e.g. for label calculation in forms)
 	ready: function() {
+		this.$readied = true;
 		if (this.$parent) {
 			this.$parent.$emit("$vue.child.added", this);
 		}
