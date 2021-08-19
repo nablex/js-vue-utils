@@ -12,6 +12,10 @@ Vue.directive("route-render", {
 			}
 			var result = vnode.context.$services.router.route(parameters.alias, parameters.parameters, element, true);
 			
+			if (binding.value && binding.value.created) {
+				binding.value.created(result);
+			}
+			
 			if (result && result.then) {
 				result.then(function(component) {
 					element["n-route-component"] = component;
@@ -34,6 +38,11 @@ Vue.directive("route-render", {
 						component.$root = vnode.context.$root;
 					}
 				});
+			}
+			else {
+				if (binding.value && binding.value.mounted) {
+					binding.value.mounted(result);
+				}
 			}
 			var cloneParameters = function(parameters) {
 				var result = {};
@@ -145,6 +154,9 @@ Vue.directive("route-render", {
 						// in a past version, we required a different alias as well before we rerendered
 						// perhaps we can do a strict mode?
 						var result = vnode.context.$services.router.route(parameters.alias, parameters.parameters, element, true);
+						if (binding.value && binding.value.created) {
+							binding.value.created(result);
+						}
 						if (result && result.then) {
 							result.then(function(component) {
 								if (vnode.context.$children) {
@@ -174,10 +186,14 @@ Vue.directive("route-render", {
 								}
 							});
 						}
+						else {
+							if (binding.value.mounted) {
+								binding.value.mounted(result);
+							}
+						}
 					}
 				}
 			}
 		}
 	}
 });
-

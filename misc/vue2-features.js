@@ -113,6 +113,7 @@ Vue.mixin({
 		if (this.$parent) {
 			this.$parent.$emit("$vue.child.added", this);
 		}
+		this.$emit("hook:ready");
 	},
 	computed: {
 		$window: function() { return window },
