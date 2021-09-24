@@ -88,12 +88,13 @@ Vue.directive("route-render", {
 		// we only want to re-render if we have rendered in the first place
 		// otherwise we can have multiple renders
 		// this stripping is currently focused on page-builder, in the future we should extract this to a configurable set of parameters
+		// page and cell are just big and shouldn't change operationally...
+		// component is for page-arbitrary, we send in the component itself... which is not serializable
+		var reserved = ["page", "cell", "component"];		//  "parameters"
 		var cloneParameters = function(parameters) {
 			var result = {};
 			Object.keys(parameters).forEach(function(x) {
-				// page and cell are just big...
-				// component is for page-arbitrary, we send in the component itself... which is not serializable
-				if (x != "page" && x != "cell" && x != "component") {	//  && x != "parameters"
+				if (reserved.indexOf(x) < 0) {
 					result[x] = parameters[x];
 				}
 			});
@@ -140,7 +141,7 @@ Vue.directive("route-render", {
 					if (parameterKeys.length == availableParameterKeys.length) {
 						isSame = true;
 						for (var i = 0; i < parameterKeys.length; i++) {
-							if (element["n-route-render-route"].parameters[parameterKeys[i]] != parameters.parameters[parameterKeys[i]]) {
+							if (reserved.indexOf(parameterKeys[i]) < 0 && element["n-route-render-route"].parameters[parameterKeys[i]] != parameters.parameters[parameterKeys[i]]) {
 								isSame = false;
 								break;
 							}
