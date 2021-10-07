@@ -9,7 +9,7 @@ nabu.utils.vue.Loader = Vue.component("n-loader", {
 nabu.utils.vue.prompt = function(render, parameters) {
 	
 	var root = document.createElement("div");
-	root.setAttribute("class", "n-prompt" + (parameters.class ? " " + parameters.class : ""));
+	root.setAttribute("class", "n-prompt" + (parameters && parameters.class ? " " + parameters.class : ""));
 	document.body.appendChild(root);
 	
 	var container;
