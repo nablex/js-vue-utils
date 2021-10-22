@@ -134,7 +134,7 @@ Vue.view = function(name, component) {
 		}
 		Vue.views[name] = {
 			original: component,
-			component: Vue.extend(component)
+			component: Vue.component(name, component)
 		};
 		
 	}
