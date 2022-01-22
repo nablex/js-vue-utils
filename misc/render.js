@@ -25,9 +25,24 @@ nabu.utils.vue.render = function(parameters) {
 					destroy(element.childNodes[i]);
 				}
 			}
+			// if you define a template and the _root_ of that template is another component (e.g. data-table-list has data-common-content as root)
+			// then there is only one HTML element in the DOM and it has the root component attached to it, not the actual component
+			// so in the example above, the __vue__ points to a data-common-content instance, NOT a data-table-list instance
+			// if you inspect that root element and check out the parent, it is the original component
+			// it has no dedicated html element available to it so it can't be found with __vue__
+			// however, it has the exact same $el available as the component itself
+			// this means, if we have a parent with the exact same $el as the child we actually found with __vue__, we also destroy it
+			// we had issues where tables were not releasing their subscriptions because their destroy was never being called
+			var parentToDestroy = null
+			if (element.__vue__ && element.__vue__.$parent && element.__vue__.$el && element.__vue__.$parent.$el === element.__vue__.$el && element.__vue__.$parent.$destroy) {
+				parentToDestroy = element.__vue__.$parent;
+			}
 			// then destroy the vm itself (if there is one)
 			if (element.__vue__ && element.__vue__.$destroy) {
 				element.__vue__.$destroy();
+			}
+			if (parentToDestroy) {
+				parentToDestroy.$destroy();
 			}
 		}
 		destroy(element);
