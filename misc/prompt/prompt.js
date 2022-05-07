@@ -9,7 +9,7 @@ nabu.utils.vue.Loader = Vue.component("n-loader", {
 nabu.utils.vue.prompt = function(render, parameters) {
 	
 	var root = document.createElement("div");
-	root.setAttribute("class", "n-prompt" + (parameters && parameters.class ? " " + parameters.class : ""));
+	root.setAttribute("class", "n-prompt is-modal" + (parameters && parameters.class ? " " + parameters.class : ""));
 	document.body.appendChild(root);
 	
 	var container;
@@ -19,7 +19,7 @@ nabu.utils.vue.prompt = function(render, parameters) {
 	}
 	else {
 		var container = document.createElement("div");
-		container.setAttribute("class", "n-prompt-container");
+		container.setAttribute("class", "n-prompt-container is-modal-content");
 		root.appendChild(container);
 	}
 	
