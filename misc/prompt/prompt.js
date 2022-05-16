@@ -7,7 +7,6 @@ nabu.utils.vue.Loader = Vue.component("n-loader", {
 })
 
 nabu.utils.vue.prompt = function(render, parameters) {
-	
 	var root = document.createElement("div");
 	root.setAttribute("class", "n-prompt is-modal" + (parameters && parameters.class ? " " + parameters.class : ""));
 	document.body.appendChild(root);
@@ -101,13 +100,24 @@ nabu.utils.vue.confirm = function(parameters) {
 				}
 			},
 			methods: {
+				getIcon: function() {
+					if (this.type == "question") {
+						return "question-circle-o";
+					}
+					else if (this.type == "warning") {
+						return "exclamation-triangle";
+					}
+					else if (this.type == "error") {
+						return "exclamation-circle";
+					}
+				},
 				resolve: function() {
 					this.$resolve();
 				}
 			}
 		});
 		return new component({ data: parameters });
-	});
+	}, {class:"is-variant-confirm"});
 };
 
 nabu.utils.vue.wait = function(parameters) {
