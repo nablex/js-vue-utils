@@ -85,6 +85,7 @@ nabu.utils.vue.prompt = function(render, parameters) {
 // - type: question, warning, error
 // - ok: the text for the ok button
 // - cancel: the text for the cancel button
+// - variant: the variant to use
 nabu.utils.vue.confirm = function(parameters) {
 	return nabu.utils.vue.prompt.bind(this)(function() {
 		var component = Vue.extend({ 
@@ -117,7 +118,7 @@ nabu.utils.vue.confirm = function(parameters) {
 			}
 		});
 		return new component({ data: parameters });
-	}, {class:"is-variant-confirm"});
+	}, {class:"is-variant-" + (this.variant ? this.variant : "confirm")});
 };
 
 nabu.utils.vue.wait = function(parameters) {
