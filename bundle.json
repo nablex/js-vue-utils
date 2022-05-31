@@ -44,7 +44,8 @@
 				"url": "directives/focus.js"
 			}, 
 			"route.js": {
-				"url": "directives/route.js"
+				"url": "directives/route.js",
+				"template": true
 			}, 
 			"bubble.js": {
 				"url": "directives/bubble.js"
@@ -61,7 +62,8 @@
 		}, 
 		"cms": {
 			"cms-masterdata.js": {
-				"url": "cms/cms-masterdata.js"
+				"url": "cms/cms-masterdata.js",
+				"template": true
 			}
 		}, 
 		"misc": {
