@@ -155,7 +155,7 @@ window.addEventListener("load", function () {
 				alias: name,
 				category: component.category,
 				description: component.description,
-				name: component.name,
+				name: component.name != name ? component.name : null,
 				icon: component.icon,
 				accept: component.accept,
 				// we call it "init" because "initialize" is already taken in vue...

@@ -78,7 +78,8 @@
 					"url": "misc/prompt/confirm.gcss"
 				}, 
 				"confirm.tpl": {
-					"url": "misc/prompt/confirm.tpl"
+					"url": "misc/prompt/confirm.tpl",
+					"template": true
 				}, 
 				"prompt.gcss": {
 					"url": "misc/prompt/prompt.gcss"
