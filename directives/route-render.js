@@ -10,61 +10,81 @@ Vue.directive("route-render", {
 				alias: binding.arg ? binding.arg : binding.value.alias,
 				parameters: binding.arg ? binding.value : binding.value.parameters
 			}
-			var result = vnode.context.$services.router.route(parameters.alias, parameters.parameters, element, true);
 			
-			if (binding.value && binding.value.created) {
-				binding.value.created(result);
-			}
-			
-			if (result && result.then) {
-				result.then(function(component) {
-					element["n-route-component"] = component;
-					if (keys && keys.length) {
-						if (vnode.context[keys[0]] instanceof Function) {
-							vnode.context[keys[0]](component);
-						}
-						else {
-							vnode.context.$refs[keys[0]] = component;
-						}
-					}
-					if (binding.value && binding.value.mounted) {
-						binding.value.mounted(component);
-					}
-					if (vnode.context.$children) {
-						vnode.context.$children.push(component);
-						component.$parent = vnode.context;
-					}
-					if (vnode.context.$root) {
-						component.$root = vnode.context.$root;
-					}
-				});
-			}
-			else {
-				if (binding.value && binding.value.mounted) {
-					binding.value.mounted(result);
+			if (parameters.alias) {
+				var result = vnode.context.$services.router.route(parameters.alias, parameters.parameters, element, true);
+				
+				if (binding.value && binding.value.created) {
+					binding.value.created(result);
 				}
-			}
-			var cloneParameters = function(parameters) {
-				var result = {};
-				Object.keys(parameters).forEach(function(x) {
-					// page and cell are just big...
-					if (x != "page" && x != "cell") {	//  && x != "parameters"
-						result[x] = parameters[x];
+				
+				if (result && result.then) {
+					result.then(function(component) {
+						element["n-route-component"] = component;
+						if (keys && keys.length) {
+							if (vnode.context[keys[0]] instanceof Function) {
+								vnode.context[keys[0]](component);
+							}
+							else {
+								vnode.context.$refs[keys[0]] = component;
+							}
+						}
+						if (binding.value && binding.value.mounted) {
+							binding.value.mounted(component);
+						}
+						var getParent = function(element) {
+							while (element) {
+								element = element.parentNode;
+								if (element && element.__vue__) {
+									return element.__vue__;
+								}
+							}
+							return null;
+						}
+						var parent = getParent(element);
+						if (parent && parent.$children) {
+							parent.$children.push(component);
+							component.$parent = parent;
+						}
+						else if (vnode.context.$children) {
+							vnode.context.$children.push(component);
+							component.$parent = vnode.context;
+						}
+						if (parent && parent.$root) {
+							component.$root = parent.$root;
+						}
+						else if (vnode.context.$root) {
+							component.$root = vnode.context.$root;
+						}
+					});
+				}
+				else {
+					if (binding.value && binding.value.mounted) {
+						binding.value.mounted(result);
 					}
-				});
-				return result;
+				}
+				var cloneParameters = function(parameters) {
+					var result = {};
+					Object.keys(parameters).forEach(function(x) {
+						// page and cell are just big...
+						if (x != "page" && x != "cell") {	//  && x != "parameters"
+							result[x] = parameters[x];
+						}
+					});
+					return result;
+				}
+				var lightParameters = {
+					alias: binding.arg ? binding.arg : binding.value.alias,
+					parameters: cloneParameters(binding.arg ? binding.value : binding.value.parameters)
+				}
+				try {
+					element["n-route-render-route-json"] = JSON.stringify(lightParameters);
+				}
+				catch (exception) {
+					console.warn("Could not marshal route render parameters", exception);				
+				}
+				element["n-route-render-route"] = parameters;
 			}
-			var lightParameters = {
-				alias: binding.arg ? binding.arg : binding.value.alias,
-				parameters: cloneParameters(binding.arg ? binding.value : binding.value.parameters)
-			}
-			try {
-				element["n-route-render-route-json"] = JSON.stringify(lightParameters);
-			}
-			catch (exception) {
-				console.warn("Could not marshal route render parameters", exception);				
-			}
-			element["n-route-render-route"] = parameters;
 		});
 	},
 	unbind: function(element, binding, vnode) {
@@ -160,19 +180,44 @@ Vue.directive("route-render", {
 						}
 						if (result && result.then) {
 							result.then(function(component) {
-								if (vnode.context.$children) {
-									if (element["n-route-component"]) {
-										var index = vnode.context.$children.indexOf(element["n-route-component"]);
+								
+								// remove previous comopnent
+								if (element["n-route-component"]) {
+									var previousComponent = element["n-route-component"];
+									// unregister with the children there
+									if (previousComponent.$parent && previousComponent.$parent.$children) {
+										var index = previousComponent.$parent.$children.indexOf(previousComponent);
 										if (index >= 0) {
-											vnode.context.$children.splice(index, 1);
+											previousComponent.$parent.$children.splice(index, 1);
 										}
 									}
+								}
+								
+								var getParent = function(element) {
+									while (element) {
+										element = element.parentNode;
+										if (element && element.__vue__) {
+											return element.__vue__;
+										}
+									}
+									return null;
+								}
+								var parent = getParent(element);
+								if (parent && parent.$children) {
+									parent.$children.push(component);
+									component.$parent = parent;
+								}
+								else if (vnode.context.$children) {
 									vnode.context.$children.push(component);
 									component.$parent = vnode.context;
 								}
-								if (vnode.context.$root) {
+								if (parent && parent.$root) {
+									component.$root = parent.$root;
+								}
+								else if (vnode.context.$root) {
 									component.$root = vnode.context.$root;
 								}
+								
 								element["n-route-component"] = component;
 								if (keys && keys.length) {
 									if (vnode.context[keys[0]] instanceof Function) {

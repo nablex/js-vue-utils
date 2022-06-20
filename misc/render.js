@@ -18,11 +18,13 @@ nabu.utils.vue.render = function(parameters) {
 	}
 	var element = anchor.$el ? anchor.$el : anchor;
 	if (!parameters.append) {
-		var destroy = function(element) {
+		var destroy = function(element, root) {
 			for (var i = 0; i < element.childNodes.length; i++) {
-				// first recursively destroy any vms that might exist
-				if (element.childNodes[i].nodeType == 1) {
-					destroy(element.childNodes[i]);
+				if (!root && element.getAttribute("unclearable") != "true" && element.getAttribute("unclearable") != true) {
+					// first recursively destroy any vms that might exist
+					if (element.childNodes[i].nodeType == 1) {
+						destroy(element.childNodes[i]);
+					}
 				}
 			}
 			// if you define a template and the _root_ of that template is another component (e.g. data-table-list has data-common-content as root)
