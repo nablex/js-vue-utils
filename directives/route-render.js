@@ -162,6 +162,10 @@ Vue.directive("route-render", {
 						isSame = true;
 						for (var i = 0; i < parameterKeys.length; i++) {
 							if (reserved.indexOf(parameterKeys[i]) < 0 && element["n-route-render-route"].parameters[parameterKeys[i]] != parameters.parameters[parameterKeys[i]]) {
+								// even if by reference they are different, do an in-depth check
+								if (JSON.stringify(element["n-route-render-route"].parameters[parameterKeys[i]]) == JSON.stringify(parameters.parameters[parameterKeys[i]])) {
+									continue;
+								}
 								isSame = false;
 								break;
 							}
