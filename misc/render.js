@@ -118,6 +118,9 @@ nabu.utils.vue.render = function(parameters) {
 			else {
 				element.appendChild(component);
 			}
+			if (element && element.scroll) {
+				element.scroll(0, 0);
+			}
 			if (component.$options && component.$options.template) {
 				if (component.$options.template.substring(0, 1) == "#") {
 					var id = component.$options.template.substring(1);
