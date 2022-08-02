@@ -39,9 +39,6 @@ Vue.directive("content", function(element, binding, vnode) {
 			content = content.value;
 		}
 		if (content != null && typeof(content) != "undefined") {
-			if ((keys && keys.indexOf("sanitize") >= 0) || parameters.sanitize) {
-				content = nabu.utils.elements.sanitize(content);
-			}
 			// we interpret this as plain string data, that means making sure everything is escaped and whitespace is adhered to
 			if ((keys && keys.indexOf("plain") >= 0) || parameters.plain) {
 				if (typeof(content) != "string") {
@@ -53,9 +50,18 @@ Vue.directive("content", function(element, binding, vnode) {
 					}
 				}
 				content = content.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
-					.replace(/\n/g, "<br/>").replace(/\t/g, "&nbsp;&nbsp;&nbsp;&nbsp;");
-					// breaks default wrapping..
-					//.replace(/ /g, "&nbsp;");
+				.replace(/\n/g, "<br/>").replace(/\t/g, "&nbsp;&nbsp;&nbsp;&nbsp;");
+				// breaks default wrapping..
+				//.replace(/ /g, "&nbsp;");
+			}
+			// the sanitize routine sends back "element.innerHTML" by default if you pass it a string
+			// however, if that string started out with a raw ampersand (e.g. "test&test")
+			// the sanitize will do nothing except basically element.innerHTML = "test&test"; return element.innerHTML;
+			// that single action will however change the content into "test&amp;test" to make it HTML-compatible
+			// if we combine this with the "plain" encoding, we get double-encoded ampersands
+			// in theory the plain encoding already prevents injection and is very unlikely to be needed in combination with an actual sanitize routine which selectively removes html elements/attrs
+			else if ((keys && keys.indexOf("sanitize") >= 0) || parameters.sanitize) {
+				content = nabu.utils.elements.sanitize(content);
 			}
 			if (typeof(content) == "string" && content.match(/^[ \t]+$/)) {
 				element.innerHTML = content;
