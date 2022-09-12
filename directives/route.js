@@ -13,7 +13,7 @@ Vue.directive("route", function(element, binding, vnode) {
 		keys.splice(keys.indexOf("all"), 1);
 	}
 	if (keys && keys.indexOf("absolute") >= 0) {
-		url = (application && application.configuration ? application.configuration.url : window.location.protocol + "//" + window.location.host) + url;
+		url = (application && application.configuration && application.configuration.url ? application.configuration.url : window.location.protocol + "//" + window.location.host) + url;
 		keys.splice(keys.indexOf("absolute"), 1);
 	}
 	var mask = false;
