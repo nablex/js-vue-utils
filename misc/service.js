@@ -103,16 +103,28 @@ nabu.services.VueService = function(component, parameters) {
 				};
 			}
 			if (!parameters || !parameters.lazy) {
+				var serviceDependencies = [];
+				if (instance.$options.services) {
+					nabu.utils.arrays.merge(serviceDependencies, instance.$options.services);
+				}
+				if (instance.$options.optionalServices) {
+					instance.$options.optionalServices.forEach(function(x) {
+						serviceDependencies.push({
+							name: x,
+							optional: true
+						})
+					});
+				}
 				// if we have service dependencies, make sure they are loaded first
-				if (instance.$options.services && instance.$options.services.length) {
+				if (serviceDependencies.length) {
 					var promises = [];
-					for (var i = 0; i < instance.$options.services.length; i++) {
+					for (var i = 0; i < serviceDependencies.length; i++) {
 						// this is either a string (this was the case for quite a long time)
 						// or an object with a "name" and an "optional" field to indicate whether the service is absolutely necessary
-						var serviceDependency = instance.$options.services[i];
+						var serviceDependency = serviceDependencies[i];
 						var promise = $services.$promise(serviceDependency.name ? serviceDependency.name : serviceDependency, serviceDependency.optional);
 						if (!promise) {
-							throw "Could not find service dependency: " + instance.$options.services[i];
+							throw "Could not find service dependency: " + serviceDependencies[i];
 						}
 						promises.push(promise);
 					}
@@ -157,13 +169,25 @@ nabu.services.VueService = function(component, parameters) {
 // mixin an activation sequence for lazy service loading
 Vue.mixin({
 	initialize: function(done) {
+		var serviceDependencies = [];
 		if (this.$options.services) {
+			nabu.utils.arrays.merge(serviceDependencies, this.$options.services);
+		}
+		if (this.$options.optionalServices) {
+			this.$options.optionalServices.forEach(function(x) {
+				serviceDependencies.push({
+					name: x,
+					optional: true
+				})
+			});
+		}
+		if (serviceDependencies.length) {
 			if (!this.$services) {
 				throw "No service provider found";
 			}
 			var promises = [];
-			for (var i = 0; i < this.$options.services.length; i++) {
-				var name = this.$options.services[i].split(".");
+			for (var i = 0; i < serviceDependencies.length; i++) {
+				var name = serviceDependencies[i].name ? serviceDependencies[i].name : serviceDependencies[i].split(".");
 				var target = this.$services;
 				for (var j = 0; j < name.length; j++) {
 					if (!target) {
