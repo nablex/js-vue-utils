@@ -107,7 +107,10 @@ nabu.services.VueService = function(component, parameters) {
 				if (instance.$options.services && instance.$options.services.length) {
 					var promises = [];
 					for (var i = 0; i < instance.$options.services.length; i++) {
-						var promise = $services.$promise(instance.$options.services[i]);
+						// this is either a string (this was the case for quite a long time)
+						// or an object with a "name" and an "optional" field to indicate whether the service is absolutely necessary
+						var serviceDependency = instance.$options.services[i];
+						var promise = $services.$promise(serviceDependency.name ? serviceDependency.name : serviceDependency, serviceDependency.optional);
 						if (!promise) {
 							throw "Could not find service dependency: " + instance.$options.services[i];
 						}
