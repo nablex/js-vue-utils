@@ -13,7 +13,7 @@ Vue.directive("route", function(element, binding, vnode) {
 		keys.splice(keys.indexOf("all"), 1);
 	}
 	if (keys && keys.indexOf("absolute") >= 0) {
-		url = "${environment('url')}" + url;
+		url = (application && application.configuration ? application.configuration.url : window.location.protocol + "//" + window.location.host) + url;
 		keys.splice(keys.indexOf("absolute"), 1);
 	}
 	var mask = false;
@@ -25,7 +25,6 @@ Vue.directive("route", function(element, binding, vnode) {
 		if (!routing) {
 			var anchor = null;
 			if (keys && keys.indexOf("self") >= 0) {
-				console.log("routing in", keys, element);
 				anchor = nabu.utils.router.self(element);
 			}
 			else if (keys && keys.length) {

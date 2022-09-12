@@ -412,17 +412,17 @@
     /**
      * Whether to suppress warnings.
      */
-    silent: "${when(environment('development') == true, false, true)}",
+    silent: application && application.configuration && application.configuration.development,
 
     /**
      * Show production mode tip message on boot?
      */
-    productionTip: "${when(environment('development') == true, 'development', 'production')}" !== 'production',
+    productionTip: application && application.configuration && application.configuration.development,
 
     /**
      * Whether to enable devtools
      */
-    devtools: "${when(environment('development') == true, 'development', 'production')}" !== 'production',
+    devtools: application && application.configuration && application.configuration.development,
 
     /**
      * Whether to record perf
@@ -1402,7 +1402,7 @@
     vm,
     key
   ) {
-    if (childVal && "${when(environment('development') == true, 'development', 'production')}" !== 'production') {
+    if (childVal && application && application.configuration && application.configuration.development) {
       assertObjectType(key, childVal, vm);
     }
     if (!parentVal) { return childVal }
@@ -11985,7 +11985,7 @@
         }
 
         var ref = compileToFunctions(template, {
-          outputSourceRange: "${when(environment('development') == true, 'development', 'production')}" !== 'production',
+          outputSourceRange: application && application.configuration && application.configuration.development,
           shouldDecodeNewlines: shouldDecodeNewlines,
           shouldDecodeNewlinesForHref: shouldDecodeNewlinesForHref,
           delimiters: options.delimiters,

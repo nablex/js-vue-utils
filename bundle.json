@@ -60,12 +60,6 @@
 				"template": true
 			}
 		}, 
-		"cms": {
-			"cms-masterdata.js": {
-				"url": "cms/cms-masterdata.js",
-				"template": true
-			}
-		}, 
 		"misc": {
 			"prompt": {
 				"prompt.sass": {
