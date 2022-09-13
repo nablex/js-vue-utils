@@ -23,7 +23,7 @@ nabu.utils.vue.prompt = function(render, parameters) {
 		root.appendChild(container);
 	}
 	
-	escapeListener = function(event) {
+	var escapeListener = function(event) {
 		if (event.keyCode == 27) {
 			document.body.removeChild(root);
 			document.removeEventListener("keydown", escapeListener);
