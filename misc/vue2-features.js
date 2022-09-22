@@ -152,7 +152,8 @@ window.addEventListener("load", function () {
 		Object.keys(Vue.views).map(function(name) {
 			var component = Vue.views[name].original;
 			var route = { 
-				alias: name,
+				priority: component.priority,
+				alias: component.alias ? component.alias : name,
 				category: component.category,
 				description: component.description,
 				name: component.name != name ? component.name : null,
