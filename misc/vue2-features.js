@@ -170,7 +170,9 @@ window.addEventListener("load", function () {
 			if (component.url) {
 				route.url = component.url;
 			}
-			if (component.props) {
+			// this is dangerous, it automatically exposes it to user input
+			// we have never used this and if we want to reintroduce it, it will be done explicitly
+			if (component.props && false) {
 				Object.keys(component.props).map(function(key) {
 					// if it does not exist in the url, assume query parameter
 					if (!route.url || route.url.indexOf("{" + key + "}") < 0) {
