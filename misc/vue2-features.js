@@ -165,7 +165,8 @@ window.addEventListener("load", function () {
 					var component = Vue.view(name);
 					return new component({propsData: properties});
 				},
-				query: []
+				query: [],
+				parameters: {}
 			};
 			if (component.url) {
 				route.url = component.url;
@@ -177,6 +178,16 @@ window.addEventListener("load", function () {
 					// if it does not exist in the url, assume query parameter
 					if (!route.url || route.url.indexOf("{" + key + "}") < 0) {
 						route.query.push(key);
+					}
+				});
+			}
+			// safer and we can still pass in from other pages!
+			else if (component.props) {
+				Object.keys(component.props).map(function(key) {
+					if (!route.url || route.url.indexOf("{" + key + "}") < 0) {
+						route.parameters[key] = {
+							type: "string"
+						}
 					}
 				});
 			}
