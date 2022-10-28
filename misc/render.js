@@ -65,7 +65,7 @@ nabu.utils.vue.render = function(parameters) {
 		// a function to complete the appending of the component to the anchor
 		var complete = function(resolvedContent) {
 			// call the activated hook before we start mounting
-			if (component.$options.activated) {
+			if (component.$options && component.$options.activated) {
 				var activated = component.$options.activated instanceof Array ? component.$options.activated : [component.$options.activated];
 				for (var i = 0; i < activated.length; i++) {
 					activated[i].call(component);
@@ -92,13 +92,15 @@ nabu.utils.vue.render = function(parameters) {
 					nabu.utils.elements.clear(element);
 				}
 			}
-			var mounted = null;
-			if (!component.$el) {
-				mounted = component.$mount();
-			}
-			else {
-				component.$remove();
-				mounted = component;
+			if (component.$mount) {
+				var mounted = null;
+				if (!component.$el) {
+					mounted = component.$mount();
+				}
+				else {
+					component.$remove();
+					mounted = component;
+				}
 			}
 
 			if (resolvedContent) {
