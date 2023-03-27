@@ -61,7 +61,7 @@ Vue.directive("content", function(element, binding, vnode) {
 			// if we combine this with the "plain" encoding, we get double-encoded ampersands
 			// in theory the plain encoding already prevents injection and is very unlikely to be needed in combination with an actual sanitize routine which selectively removes html elements/attrs
 			else if ((keys && keys.indexOf("sanitize") >= 0) || parameters.sanitize) {
-				content = nabu.utils.elements.sanitize(content);
+				content = nabu.utils.elements.sanitize(content, keys.indexOf("allowDataAttributes") >= 0 || parameters.allowDataAttributes);
 			}
 			if (typeof(content) == "string" && content.match(/^[ \t]+$/)) {
 				element.innerHTML = content;
