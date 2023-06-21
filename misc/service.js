@@ -89,6 +89,24 @@ nabu.services.VueService = function(component, parameters) {
 					return new nabu.utils.promises(promises);
 				}
 			}
+			if (instance.$options.switchLanguage) {
+				instance.$switchLanguage = function() {
+					var switchLanguages = instance.$options.switchLanguage instanceof Array ? instance.$options.switchLanguage : [instance.$options.switchLanguage];
+					var promises = [];
+					var callSwitchLanguage = function(switchLanguage) {
+						var promise = new nabu.utils.promise();
+						var done = function() {
+							promise.resolve();
+						};
+						switchLanguage.call(instance, done);
+						return promise;
+					};
+					for (var i = 0; i < switchLanguages.length; i++) {
+						promises.push(callSwitchLanguage(switchLanguages[i]));
+					}
+					return new nabu.utils.promises(promises);
+				}
+			}
 			if (parameters && parameters.lazy) {
 				instance.$lazy = function() {
 					if (!instance.$lazyInitialized) {
