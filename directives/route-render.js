@@ -151,10 +151,22 @@ Vue.directive("route-render", {
 			
 				var isSameAlias = element["n-route-render-route"]
 					&& element["n-route-render-route"].alias == parameters.alias;
+					
+					
+				// if we have the same alias and only the parameters are different, check if the component supports live loading of new parameters
+				// if so, the component can still decide a rerender is necessary
+				if (isSameAlias && element["n-route-component"] && element["n-route-component"].setRouteParameters) {
+					var rerender = element["n-route-component"].setRouteParameters(parameters.parameters);
+					if (!rerender) {
+						return null;
+					}
+				}
 			
+				// if it is the same alias and the exact same parameters object, the details are already known
 				var isSame = isSameAlias
 					&& element["n-route-render-route"].parameters == parameters.parameters;
-				// check by reference
+					
+				// check the child content of the parameters by reference, maybe the parent is a new object but it contains the same data
 				if (!isSame && element["n-route-render-route"] && element["n-route-render-route"].parameters && parameters.parameters) {
 					var parameterKeys = Object.keys(parameters.parameters);
 					var availableParameterKeys = Object.keys(element["n-route-render-route"].parameters);
