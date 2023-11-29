@@ -80,8 +80,9 @@ Vue.directive("content", function(element, binding, vnode) {
 					content = nabu.utils.elements.sanitize(content, sanitizeParameters);
 				}
 			}
-			if (typeof(content) == "string" && content.match(/^[ \t]+$/)) {
-				element.innerHTML = content;
+			if (typeof(content) == "string" && content.trim().length == 0) { // content.match(/^[ \t]+$/)
+				element.appendChild(document.createTextNode(content));
+				//element.innerHTML = content;
 			}
 			else if (compile) {
 				var context = {};
@@ -125,7 +126,12 @@ Vue.directive("content", function(element, binding, vnode) {
 				rewriteLinks();
 			}
 			else {
-				element.innerHTML = content;
+				if (content.indexOf("<") >= 0) {
+					element.innerHTML = content;
+				}
+				else {
+					element.appendChild(document.createTextNode(content));
+				}
 				rewriteLinks();
 			}
 		}

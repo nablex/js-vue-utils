@@ -121,7 +121,9 @@ nabu.utils.vue.render = function(parameters) {
 				element.appendChild(component);
 			}
 			if (element && element.scroll) {
-				element.scroll(0, 0);
+				// @2023-11-29: this forces a layout which incurs a _lot_ of overhead
+				// by disabling this we sped up a particular page from 38s to 8s rendering time
+				//element.scroll(0, 0);
 			}
 			if (component.$options && component.$options.template) {
 				if (component.$options.template.substring(0, 1) == "#") {
