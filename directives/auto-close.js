@@ -25,7 +25,7 @@ Vue.directive("auto-close", {
 					}
 				}
 				if (close && binding.value) {
-					binding.value(inside);
+					binding.value(inside, event);
 				}
 			};
 			window.addEventListener("click", element["$n-auto-close-listener"], true);
