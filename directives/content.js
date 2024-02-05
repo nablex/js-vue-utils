@@ -130,7 +130,11 @@ Vue.directive("content", function(element, binding, vnode) {
 					element.innerHTML = content;
 				}
 				else {
-					element.appendChild(document.createTextNode(content));
+					// this will escape HTML, however we already do that potentially so we don't want to do that here because it can lead to double escaping
+					// element.appendChild(document.createTextNode(content));
+					var tmp = document.createElement("span");
+					tmp.innerHTML = content;
+					element.appendChild(tmp);
 				}
 				rewriteLinks();
 			}
