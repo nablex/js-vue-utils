@@ -60,6 +60,11 @@
 				"template": true
 			}
 		}, 
+		"utils": {
+			"objects.js": {
+				"url": "utils/objects.js"
+			}
+		},
 		"misc": {
 			"prompt": {
 				"prompt.sass": {
