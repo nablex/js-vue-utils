@@ -114,6 +114,11 @@ nabu.utils.vue.confirm = function(parameters) {
 				},
 				resolve: function() {
 					this.$resolve();
+				},
+				translate: function(value) {
+					// slightly messed up regex to avoid %{} replacement if templating is turned on (backwards compatibility)
+					return parameters && parameters.translator ? parameters.translator(value) : 
+						(value && value.replace ? value.replace(/%[{](?:[a-zA-Z]+[:]+|)([^}]+)}/, "$1") : value);
 				}
 			}
 		});

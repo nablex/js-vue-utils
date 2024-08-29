@@ -6,8 +6,8 @@
 			<div class="is-confirm-message" v-html="message"></div>
 		</div>
 		<div class="is-confirm-buttons">
-			<button class="is-confirm-button-cancel" v-if="rejectable" @click="$reject()" v-html="cancel ? cancel : '%{Cancel}'"></button>
-			<button class="is-confirm-button-ok" @click="resolve()" v-focus v-html="ok ? ok : '%{Ok}'"></button>
+			<button class="is-confirm-button-cancel" v-if="rejectable" @click="$reject()" v-html="cancel ? cancel : translate('%{confirm::Cancel}')"></button>
+			<button class="is-confirm-button-ok" @click="resolve()" v-focus v-html="ok ? ok : translate('%{confirm::Ok}')"></button>
 		</div>
 	</div>
 </template>
