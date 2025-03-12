@@ -24,7 +24,7 @@ window.addEventListener("scroll", function(event) {
 			}
 		});
 	}, 100);
-});
+}, true);
 
 Vue.directive("visible", {
 	bind: function(element, binding) {
