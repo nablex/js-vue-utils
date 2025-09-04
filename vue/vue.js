@@ -1686,8 +1686,8 @@
     // the raw prop value was also undefined from previous render,
     // return previous default value to avoid unnecessary watcher trigger
     if (vm && vm.$options.propsData &&
-      vm.$options.propsData[key] === undefined &&
-      vm._props[key] !== undefined
+      vm.$options.propsData[key] == undefined &&
+      vm._props[key] != undefined
     ) {
       return vm._props[key]
     }
