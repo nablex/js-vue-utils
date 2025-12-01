@@ -108,7 +108,7 @@ nabu.services.VueRouter = function(routerParameters) {
 				}
 				if (element) {
 					var leaver = function(element) {
-						for (var i = 0; i < element.childNodes.length; i++) {
+						for (var i = 0; i < element.childNodes?.length; i++) {
 							if (element.childNodes[i].nodeType == 1) {
 								leaver(element.childNodes[i]);
 							}
